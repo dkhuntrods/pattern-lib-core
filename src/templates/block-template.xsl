@@ -23,6 +23,11 @@
                 <div class="crate_block__item">
                 <xsl:apply-templates select="page/blocks"/>
                 </div>
+                {% for _block in page.blocks %}
+                <div class="crate_block__item">
+                    <div data-{{_block.name}}=""/>
+                </div>
+                {% endfor %}
                 <div class="crate_block__content">{{page.contents|safe}}</div>
             </div>
 

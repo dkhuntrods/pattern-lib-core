@@ -3,6 +3,7 @@
             {% for _block in page.blocks %}
                 {% set jsEntry = _block.name|jsEntry %}
                 {% set jsUrlPath = _block.name|jsUrlPath %}
+                {% if jsUrlPath && jsEntry %}
                 <script src="{{jsUrlPath}}"></script>
                 <script>
                     <xsl:text disable-output-escaping="yes" >
@@ -16,4 +17,5 @@
                     ]]>
                     </xsl:text>
                 </script>
+                {% endif %}
             {% endfor %}

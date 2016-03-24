@@ -5,10 +5,18 @@
 
             <div class="crate_blocks__item" id="{{block.name}}">
                 <h3 class="crate_blocks__item__heading"><a href="{{block.urlPath}}">{{block.name}}</a></h3>
+                {% set xslUrlPath = block.name|xslUrlPath %}
+                {% set jsUrlPath = block.name|jsUrlPath %}
 
+                {% if xslUrlPath %}
                 <div class="crate_blocks__content">
                     <xsl:call-template name="call-{{block.name}}"/>
                 </div>
+                {% elseif jsUrlPath  %}
+                <div class="crate_blocks__content">
+                    <div data-{{block.name}}=""/>
+                </div>
+                {% endif %}
 
                 <a href="{{block.urlPath}}" class="crate_blocks__item__link"><span class="crate_blocks__item__link__text">View block</span></a>
 

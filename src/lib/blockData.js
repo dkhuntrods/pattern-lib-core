@@ -78,16 +78,26 @@ function createBlock(name, resolvedname) {
             file = _.find(_files, function(file) {
                 var fileName = file.getInfo().name,
                     rendererTest = /^_([\w-]+)-renderer\.js$/;
-                    hasRenderer = rendererTest.test(fileName);
+                hasRenderer = rendererTest.test(fileName);
                 return hasRenderer;
             });
             if (!file) {
                 file = _.find(_files, function(file) {
                     var fileName = file.getInfo().name;
-                        hasJs = name + '.js' === fileName;
+                    hasJs = name + '.js' === fileName;
                     return hasJs;
                 });
             }
+            return file;
+        },
+        getXslEntry: function() {
+            if (_.isEmpty(_files)) return null;
+            var hasXSL, file;
+            file = _.find(_files, function(file) {
+                var fileName = file.getInfo().name;
+                hasXSL = name + '.xsl' === fileName;
+                return hasXSL;
+            });
             return file;
         },
         clearData: function() {

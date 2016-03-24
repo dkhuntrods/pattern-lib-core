@@ -101,5 +101,20 @@ module.exports = function(blockData, pageData) {
         return jsEntry;
     });
 
+    swig.setFilter('xslUrlPath', function(name) {
+        var xslEntryFile, block, xslUrlPath = '';
+
+        block = blockData.getBlock(name);
+        if (!block) return xslUrlPath;
+
+        xslEntryFile = block.getXslEntry();
+        if (xslEntryFile) {
+            xslUrlPath = path.join(path.sep, xslEntryFile.getInfo().absolutePath); //TODO: make path more robust
+        }
+
+        // console.log('urlPath: ', data, name, fileInfo, urlPath);
+        return xslUrlPath;
+    });
+
     return swig;
 };

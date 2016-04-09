@@ -12,13 +12,13 @@ var gulp = require('gulp'),
     paths = config.paths,
 
 
-    blockData = require('./src/lib/blockData')(),
-    pageData = require('./src/lib/pageData')(),
-    siteData = require('./src/lib/siteData')(config.site),
-    swig = require('./src/lib/augmentedSwig')(blockData, pageData),
+    blockStore = require('./src/lib/stores/blocks')(),
+    pageStore = require('./src/lib/stores/pages')(),
+    siteStore = require('./src/lib/stores/site')(config.site),
+    swig = require('./src/lib/augmentedSwig')(blockStore, pageStore),
 
-    buildXSLTBlockOptions = require('./src/lib/mdtoXSLTBlocks')(blockData, siteData, swig),
-    buildXSLTPageOptions = require('./src/lib/mdtoXSLTPages')(pageData, blockData, siteData, swig),
+    buildXSLTBlockOptions = require('./src/lib/mdtoXSLTBlocks')(blockStore, siteStore, swig),
+    buildXSLTPageOptions = require('./src/lib/mdtoXSLTPages')(pageStore, blockStore, siteStore, swig),
     fileInfoOptions = require('./src/lib/fileInfoOptions')(gulp, plugins),
     getBlockInfo = require('./src/gulp-tasks/fileInfo').getBlockInfo,
     getFileInfo = require('./src/gulp-tasks/fileInfo').getFileInfo,
@@ -42,10 +42,10 @@ var gulp = require('gulp'),
  * Compile block and page info for use in other build steps
  */
 gulp.task('info:blocks',
-    getBlockInfo('blocks/core', blockData, fileInfoOptions.blocks, config.site));
+    getBlockInfo('blocks/core', blockStore, fileInfoOptions.blocks, config.site));
 
 gulp.task('info:pages', ['info:blocks'],
-    getFileInfo('pages/', pageData, fileInfoOptions.pages, config.site));
+    getFileInfo('pages/', pageStore, fileInfoOptions.pages, config.site));
 
 gulp.task('info', ['info:blocks', 'info:pages']);
 
@@ -106,7 +106,7 @@ gulp.task('export:less',
  * Compile javascript
  */
 gulp.task('js', ['info'],
-    webpackTasks.develop(blockData));
+    webpackTasks.develop(blockStore));
 
 /**
  * Export javascript

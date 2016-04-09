@@ -69,17 +69,14 @@ module.exports = function(gulp, plugins, config, utils) {
             };
     }
 
-
-    function getCompiler(options, blockData) {
+    function getCompiler(options, blockStore) {
 
         return function(callback) {
 
-            var entries = blockData.getJsEntries();
+            var entries = blockStore.getAllFormatEntriesWithType('js');
             entries = _.reduce(entries, function(result, entry) {
-                var info = entry.getInfo();
-
-                //TODO: make path more robust
-                result[info.name.replace('.js', '')] = [path.join(process.cwd(), info.absolutePath)]; //Needs to be array as workaround for https://github.com/webpack/webpack/issues/300
+                var info = entry.file.getInfo();
+                result[entry.reference] = [path.join(process.cwd(), info.relativePath)]; //Needs to be array as workaround for https://github.com/webpack/webpack/issues/300
                 return result;
             }, {});
 
@@ -119,8 +116,8 @@ module.exports = function(gulp, plugins, config, utils) {
     }
 
     return {
-        develop: function(blockData) {
-            return getCompiler(config.webpack.develop, blockData);
+        develop: function(blockStore) {
+            return getCompiler(config.webpack.develop, blockStore);
         },
         export: function() {
             return getExportCompiler(compilers.export);

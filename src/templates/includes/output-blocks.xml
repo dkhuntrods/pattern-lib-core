@@ -1,5 +1,5 @@
 {% for block in blocks %}
-{% set includePath = '../../../'+block.name|resourcePath('.xml', 'absolute') %}
+{% set includePath = '../../../'+block.name|getFormatUrlPathForType('xsl', 'data') %}
 {% if includePath %}
 {% for datum in block.data %}
 {% set datum.blockname = block.name %}

@@ -1,6 +1,6 @@
 {%- if blocks -%}
 {% for block in blocks -%}
-    {%- set blockXSLPath = '../../../'+block.name|resourcePath('.xsl') -%}
+    {%- set blockXSLPath = '../../../'+block.name|getFormatUrlPathForType('xsl') -%}
 
     {%- if blockXSLPath -%}
     {% include blockXSLPath with {blockname: block.name} %}
@@ -22,7 +22,7 @@
 
 {%- if requires.length -%}
 {%- for required in requires -%}
-    {%- set reqPath = '../../../'+required|resourcePath('.xsl') -%}
+    {%- set reqPath = '../../../'+required|getFormatUrlPathForType('xsl') -%}
     {% include reqPath %}
 {%- endfor -%}
 {%- endif -%}

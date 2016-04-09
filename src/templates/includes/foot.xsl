@@ -1,8 +1,8 @@
 
             {% include '../includes/inline-scripts.xsl' %}
             {% for _block in page.blocks %}
-                {% set jsEntry = _block.name|jsEntry %}
-                {% set jsUrlPath = _block.name|jsUrlPath %}
+                {% set jsEntry = _block.name|getFormatReferenceForType('js') %}
+                {% set jsUrlPath = _block.name|getFormatUrlPathForType('js') %}
                 {% if jsUrlPath && jsEntry %}
                 <script src="{{jsUrlPath}}"></script>
                 <script>

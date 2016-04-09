@@ -21,7 +21,7 @@ function convertPageDefToBlocks(page, blockData) {
         blocks;
 
     if (hasNoBlocks) {
-        blocks = blockData.getAllData();
+        blocks = blockData.getAllBlocks();
     } else {
         blocks = _.reduce(currentPageData, function(arr, blockDef) {
 
@@ -60,9 +60,9 @@ module.exports = function(pageData, blockData, siteData, swig) {
             return block.name;
         });
 
-        pageContext.site.pages = pageData.getAllData();
-        pageContext.site.blocks = blockData.getAllData();
-        pageContext.requires = blockData.getBlocklistRequires(reqlist);
+        pageContext.site.pages = pageData.getAllPages();
+        pageContext.site.blocks = blockData.getAllBlocks();
+        pageContext.requires = blockData.getAllRequires(reqlist);
 
         return pageContext;
     }

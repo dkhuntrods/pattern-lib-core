@@ -2,7 +2,7 @@
 
 var _ = require('lodash'),
     path = require('path'),
-    createFile = require('./fileData');
+    createFile = require('./file');
 
 module.exports = function() {
 
@@ -21,21 +21,13 @@ module.exports = function() {
         }, []);
     }
 
-    // function getFileListRequires(names) {
-    //     var filelist = (names.length) ? _.map(names, getFile) : files;
-
-    //     return _.reduce(filelist, function(depsList, block) {
-    //         depsList = _.union(depsList, block.getDependencies());
-    //         return depsList;
-    //     }, []);
-    // }
-
     function addFile(name, resolvedname) {
         files[name] = createFile(name, resolvedname);
         return files[name];
     }
 
     return {
+        name: 'pages',
         addFile: function(name, resolvedname) {
             var block = getFile(name) || addFile(name, resolvedname);
             return block;
@@ -43,9 +35,15 @@ module.exports = function() {
         getFile: function(name) {
             return getFile(name);
         },
-        getAllData: function( /* (optional) Array of names */ ) {
+        getAllPages: function( /* (optional) Array of names */ ) {
             var args = Array.prototype.slice.call(arguments);
             return getFiles(args);
+        },
+        getAllFormatEntriesWithType: function(){
+            return 'files';
+        },
+        getAllFormatsWithType: function(formatType){
+            return 'files';
         }
     };
 };

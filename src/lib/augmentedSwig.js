@@ -5,115 +5,49 @@ path = require('path');
 
 function getBackupInfo(ext) {
     return {
-        absolutePath: 'src/templates/default' + ext,
         relativePath: 'src/templates/default' + ext
-    }
+    };
+}
+function getBackupPathByType(type) {
+    return 'src/templates/default.' + type;
 }
 
-module.exports = function(blockData, pageData) {
+
+module.exports = function(blockStore, pageStore) {
     swig.setDefaults({
         cache: false
     });
-    swig.setFilter('resourcePath', function(blockname, extname, type) {
-        type = type || 'absolute';
-        extname = extname || '';
-        var path = '',
-            file,
-            fileInfo;
-        // console.log('1 resourcePath', blockname, extname, path);
-        if (!blockname) return path;
-
-        var block = blockData.getBlock(blockname);
-
-        fileInfo = getBackupInfo(extname);
-
-        if (block) {
-            // console.log('blockfile:', block.getFile(blockname + extname));
-            file = block.getFile(blockname + extname);
-            if (file) {
-                fileInfo = file.getInfo();
-            }
-        }
 
 
-        switch (type) {
-            case 'absolute':
-                path = fileInfo.absolutePath;
-                break;
-            case 'relative':
-                path = fileInfo.relativePath;
-                break;
-        }
+    function getFormatWithType(blockName, formatName, type) {
+        var format, block;
+        type = type || 'entry';
+        block = blockStore.getBlock(blockName);
+        if (!block) return null;
+        format = block.getFormat(formatName);
+        if (!format) return null;
+        // console.log(blockName, formatName, formatType, formatUrlPath);
+        return format[type] || null;
+    }
 
-        // console.log('2 resourcePath', blockname, extname, path);
-        return path;
+    swig.setFilter('getFormatUrlPathForType', function(blockName, formatName, type, addDefault){
+        addDefault = (addDefault !== undefined) ? addDefault : true;
+        var formatUrlPath = addDefault ? getBackupPathByType(formatName):'',
+            formatType;
+
+        formatType = getFormatWithType(blockName, formatName, type);
+        // console.log(blockName, formatName, type, formatType, formatUrlPath);
+        if (!formatType) return formatUrlPath;
+        return formatType.path || formatUrlPath;
     });
 
-    swig.setFilter('urlPath', function(name, type) {
-        var dataStore, data, fileInfo, urlPath = '/';
+    swig.setFilter('getFormatReferenceForType', function(blockName, formatName, type){
+        var formatReferenceForType = '', formatType;
 
-        switch (type) {
-            case 'page':
-                data = pageData.getFile(name);
-                break;
-            default:
-                data = blockData.getBlock(name)
-                break;
-        }
-
-        if (data) {
-            fileInfo = data.getInfo();
-            if (fileInfo) {
-                urlPath = fileInfo.urlPath;
-            }
-        }
-        // console.log('urlPath: ', data, name, fileInfo, urlPath);
-        return urlPath;
-    });
-
-    swig.setFilter('jsUrlPath', function(name) {
-        var jsEntryFile, block, jsUrlPath = '';
-
-        block = blockData.getBlock(name);
-        if (!block) return jsUrlPath;
-
-        jsEntryFile = block.getJsEntry();
-        if (jsEntryFile) {
-            jsUrlPath = path.join(path.sep, 'js', jsEntryFile.getInfo().name); //TODO: make path more robust
-        }
-
-        // console.log('urlPath: ', data, name, fileInfo, urlPath);
-        return jsUrlPath;
-    });
-
-    swig.setFilter('jsEntry', function(name) {
-        var jsEntryFile, block, jsEntry = '';
-
-        block = blockData.getBlock(name);
-        if (!block) return jsEntry;
-
-        jsEntryFile = block.getJsEntry();
-        if (jsEntryFile) {
-            jsEntry = jsEntryFile.getInfo().name.replace('.js', ''); //TODO: make path more robust
-        }
-
-        // console.log('urlPath: ', data, name, fileInfo, urlPath);
-        return jsEntry;
-    });
-
-    swig.setFilter('xslUrlPath', function(name) {
-        var xslEntryFile, block, xslUrlPath = '';
-
-        block = blockData.getBlock(name);
-        if (!block) return xslUrlPath;
-
-        xslEntryFile = block.getXslEntry();
-        if (xslEntryFile) {
-            xslUrlPath = path.join(path.sep, xslEntryFile.getInfo().absolutePath); //TODO: make path more robust
-        }
-
-        // console.log('urlPath: ', data, name, fileInfo, urlPath);
-        return xslUrlPath;
+        formatType = getFormatWithType(blockName, formatName, type);
+        // console.log(blockName, formatName, formatType);
+        if (!formatType) return formatReferenceForType;
+        return formatType.reference || formatReferenceForType;
     });
 
     return swig;

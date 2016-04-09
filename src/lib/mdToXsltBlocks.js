@@ -30,7 +30,7 @@ module.exports = function(blockData, siteData, swig) {
             cache: false
         });
         blockContext.page.contents = file.contents.toString();
-        blockContext.site.blocks = blockData.getAllData();
+        blockContext.site.blocks = blockData.getAllBlocks();
 
         return blockContext;
     }

@@ -3,7 +3,7 @@
 var path = require('path'),
     matter = require('gray-matter'),
     marked = require('marked'),
-    _ = require('lodash'),
+    util = require('util'),
     dir = require('node-dir'),
     async = require('async');
 
@@ -52,7 +52,7 @@ function getFileData(filePath) {
     return fileData;
 }
 
-function ifClosestBlockMatchesCurrentBlock(filePath, currentBlock, dataStore, cb) {
+function testClosestBlockMatchesCurrentBlock(filePath, currentBlock, dataStore, cb) {
     var dirs = filePath.split(path.sep),
         closestBlock;
     dirs.pop();
@@ -71,7 +71,7 @@ function getBlockFileProcess(block, dataStore, options) {
     return function processFile(filePath, fileCallback) {
         var fileData, file;
 
-        ifClosestBlockMatchesCurrentBlock(filePath, block, dataStore, function(blocksMatch) {
+        testClosestBlockMatchesCurrentBlock(filePath, block, dataStore, function(blocksMatch) {
             if (blocksMatch) {
                 fileData = getFileData(filePath);
                 file = block.addFile(fileData.fsInfo.name, fileData.fsInfo.resolvedName);
@@ -118,6 +118,13 @@ function getBlockSubdirProcess(dataStore, options) {
             processFile = getBlockFileProcess(block, dataStore, options),
             processFileComplete = function(err) {
                 if (err) return subdirCallback(err);
+                // console.log('\n__________________');
+                // console.log('js:\n');
+                // console.log(block.getFormat('js'));
+                // console.log('\n~~~~~~~~~~~~~~~~~~');
+                // console.log('xsl:\n');
+                // console.log(block.getFormat('xsl'));
+                // console.log('\n__________________');
                 subdirCallback();
             };
 
@@ -132,7 +139,10 @@ function getProcessSubdirComplete(dataStore, callback) {
     return function processSubdirComplete(err) {
         if (err) return callback(err);
         // console.log('\n__________________');
-        // console.log(util.inspect(dataStore.getAllData(), {
+        // console.log(dataStore.getAllFormatsWithType('js'));
+        // console.log(dataStore.getAllFormatEntriesWithType('js'));
+
+        // console.log(util.inspect(dataStore.getAllBlocks(), {
         //     showHidden: false,
         //     depth: 2
         // }));

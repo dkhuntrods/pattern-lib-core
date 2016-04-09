@@ -12,10 +12,10 @@ function createFile(name, filepath) {
         _data = [],
         _content = '',
         _relativePath = path.relative(process.cwd(), filepath),
-        _absolutePath = filepath,
         _urlPath = gutil.replaceExtension(filepath, '.html');
 
     return {
+        name: _name,
         addData: function(data) {
             if (!data) return;
             _data = data;
@@ -36,30 +36,26 @@ function createFile(name, filepath) {
             return this;
         },
         getData: function() {
-            return _data;
+            return _.cloneDeep(_data);
         },
         getMeta: function() {
-            return _meta;
+            return _.cloneDeep(_meta);
         },
         getContent: function(){
             return _content;
-        },
-        getAbsolutePath: function(){
-            return _absolutePath;
         },
         getInfo: function() {
             return {
                 name: _name,
                 resolvedname: _resolvedname,
-                meta: _meta,
-                data: _data,
+                meta: this.getMeta(),
+                data: this.getData(),
                 content: _content,
                 relativePath: _relativePath,
-                absolutePath: _absolutePath,
                 urlPath: _urlPath
-            }
+            };
         }
-    }
+    };
 }
 
 module.exports = createFile;

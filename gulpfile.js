@@ -34,6 +34,8 @@ var gulp = require('gulp'),
     clean = require('./src/gulp-tasks/clean')(gulp, plugins);
 
 
+    var getFiles = require('./src2/gulp-tasks/getFiles'),
+        getBlocks = require('./src2/gulp-tasks/getBlocks');
 /**
  * Data
  * ******************************************/
@@ -49,6 +51,8 @@ gulp.task('info:pages', ['info:blocks'],
 
 gulp.task('info', ['info:blocks', 'info:pages']);
 
+gulp.task('_info:files', getFiles(path.join('blocks','core')));
+gulp.task('_info:blocks', getBlocks(path.join('blocks', 'core')));
 
 
 /**

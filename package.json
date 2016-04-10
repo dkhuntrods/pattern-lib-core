@@ -57,6 +57,7 @@
     "gulp-util": "^3.0.7",
     "gulp-wrap": "^0.11.0",
     "gulpicon": "^0.1.2",
+    "immutable": "^3.7.6",
     "lazypipe": "^1.0.1",
     "less-plugin-autoprefix": "^1.5.1",
     "libxslt": "^0.6.3",

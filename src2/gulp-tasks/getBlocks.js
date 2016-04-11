@@ -52,30 +52,29 @@ function checkIsBlock(dirPath, cb) {
     });
 }
 
-module.exports = function(dirPath) {
-    return function(onComplete) {
-        dir.paths(dirPath, function(err, paths) {
-            if (err) return onComplete(err);
-            var filePaths = paths.files;
-            var dirPaths = paths.dirs;
+module.exports = function(dirPath, onComplete) {
 
-            async.filter(dirPaths, checkIsBlock, function(_dirPaths){
-                async.map(_dirPaths, function(dirPath, cb){
-                    var block;
-                    try {
-                        block = createBlock(dirPath);
-                    } catch(e){
-                        return cb(e);
-                    }
-                    cb(null, block);
-                }, function(err, __dirPaths){
-                    if (err) return onComplete(err);
-                    console.log(__dirPaths);
-                    onComplete();
-                });
+    dir.paths(dirPath, function(err, paths) {
+        if (err) return onComplete(err);
+        var filePaths = paths.files;
+        var dirPaths = paths.dirs;
+
+        async.filter(dirPaths, checkIsBlock, function(_dirPaths){
+            async.map(_dirPaths, function(dirPath, cb){
+                var block;
+                try {
+                    block = createBlock(dirPath);
+                } catch(e){
+                    return cb(e);
+                }
+                cb(null, block);
+            }, function(err, results){
+                if (err) return onComplete(err);
+                // console.log(results);
+                onComplete(null, results);
             });
-
         });
 
-    };
+    });
+
 }

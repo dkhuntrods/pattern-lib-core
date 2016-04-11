@@ -6,10 +6,11 @@ var Immutable = require('immutable'),
 module.exports = function(filePath) {
 
     var fsInfo = path.parse(filePath);
-    console.log(fsInfo);
+    // console.log(filePath, fsInfo);
 
     return {
         name: fsInfo.base,
+        resolvedName: filePath,
         dir: fsInfo.dir
     };
 }

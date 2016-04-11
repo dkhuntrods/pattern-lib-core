@@ -34,8 +34,7 @@ var gulp = require('gulp'),
     clean = require('./src/gulp-tasks/clean')(gulp, plugins);
 
 
-    var getFiles = require('./src2/gulp-tasks/getFiles'),
-        getBlocks = require('./src2/gulp-tasks/getBlocks');
+
 /**
  * Data
  * ******************************************/
@@ -51,8 +50,45 @@ gulp.task('info:pages', ['info:blocks'],
 
 gulp.task('info', ['info:blocks', 'info:pages']);
 
-gulp.task('_info:files', getFiles(path.join('blocks','core')));
-gulp.task('_info:blocks', getBlocks(path.join('blocks', 'core')));
+
+
+
+var getFiles = require('./src2/gulp-tasks/getFiles'),
+    getBlocks = require('./src2/gulp-tasks/getBlocks'),
+    createFileStore = require('./src2/lib/stores/files'),
+    createBlockStore = require('./src2/lib/stores/blocks');;
+
+gulp.task('_info:files', function(cb) {
+    getFiles(path.join('blocks', 'core'), function(err, results){
+        console.log(results);
+        cb();
+    });
+});
+
+gulp.task('_info:blocks', function(cb) {
+    getBlocks(path.join('blocks', 'core'), function(err, results){
+        console.log(results);
+        cb();
+    });
+});
+
+gulp.task('store:blocks', function(cb) {
+    getBlocks(path.join('blocks', 'core'), function(err, results) {
+        var blocks = createBlockStore(results);
+        var block = blocks.getBlockByResolvedName('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
+        console.log(block);
+        cb();
+    });
+});
+
+gulp.task('store:files', function(cb) {
+    getFiles(path.join('blocks', 'core'), function(err, results) {
+        var files = createFileStore(results);
+        var file = files.getFileByResolvedName('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component/ff_module-dropdown-button-component.md');
+        console.log(file);
+        cb();
+    });
+});
 
 
 /**

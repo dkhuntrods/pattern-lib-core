@@ -4,22 +4,20 @@ var path = require('path'),
     dir = require('node-dir'),
     async = require('async');
 
-    var createFile = require('../lib/stores/file');
+var createFile = require('../lib/stores/file');
 
-module.exports = function(dirPath) {
-    return function(onComplete) {
-        dir.paths(dirPath, function(err, paths) {
-            if (err) return onComplete(err);
-            var filePaths = paths.files;
+module.exports = function(dirPath, onComplete) {
 
-            // console.log(filePaths);
-            filePaths = filePaths.map(function(filePath) {
-                return createFile(filePath);
-            });
-            console.log(filePaths);
+    dir.paths(dirPath, function(err, paths) {
+        if (err) return onComplete(err);
+        var filePaths = paths.files;
 
-            onComplete();
+        // console.log(filePaths);
+        filePaths = filePaths.map(function(filePath) {
+            return createFile(filePath);
         });
+        // console.log(filePaths);
+        onComplete(null, filePaths);
+    });
 
-    };
 }

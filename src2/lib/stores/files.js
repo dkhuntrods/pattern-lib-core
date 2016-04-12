@@ -5,17 +5,20 @@ var Immutable = require('immutable'),
 
 
 function convertToMap(list){
-    return Immutable.Map(_.reduce(list, function(ob, file){
-        ob[file.resolvedName] = file;
+    return Immutable.Map(_.reduce(list, function(ob, map){
+        ob[map.get('resolvedName')] = map;
         return ob;
     }, {}));
 }
 
 module.exports = function(fileList){
-    var map = convertToMap(fileList);
+    var _map = convertToMap(fileList);
     return {
-        getFileByResolvedName(resolvedFileName){
-            return map.get(resolvedFileName);
+        getFileByResolvedName: function(resolvedFileName){
+            return _map.get(resolvedFileName);
+        },
+        getFiles: function(){
+            return _map;
         }
     };
 };

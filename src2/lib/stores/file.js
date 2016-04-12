@@ -8,9 +8,9 @@ module.exports = function(filePath) {
     var fsInfo = path.parse(filePath);
     // console.log(filePath, fsInfo);
 
-    return {
+    return Immutable.Map({
         name: fsInfo.base,
         resolvedName: filePath,
         dir: fsInfo.dir
-    };
+    });
 }

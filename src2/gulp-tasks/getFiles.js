@@ -1,36 +1,27 @@
 'use strict';
 
-var path = require('path'),
-    dir = require('node-dir'),
-    async = require('async');
+var dir = require('node-dir');
 
 var createFile = require('../lib/stores/file');
 
-function _fileDefinition(filePath, cb){
-    return cb(true);
+function createFileFromPath(filePath){
+    try {
+        return createFile(filePath);
+    } catch(e){
+        return null;
+    }
 }
 
 module.exports = function(dirPath, fileDefinition, onComplete) {
-    fileDefinition = fileDefinition || _fileDefinition;
-    dir.paths(dirPath, function(err, paths) {
-        if (err) return onComplete(err);
-        var filePaths = paths.files;
 
-        async.filter(filePaths, fileDefinition, function(filePaths){
-            async.map(filePaths, function(dirPath, cb){
-                var file;
-                try {
-                    file = createFile(dirPath);
-                } catch(e){
-                    return cb(e);
-                }
-                cb(null, file);
-            }, function(err, results){
-                if (err) return onComplete(err);
-                // console.log(results);
-                onComplete(null, results);
-            });
-        });
+    dir.paths(dirPath, true, function(err, paths) {
+        if (err) return onComplete(err);
+
+        var results = paths
+            .filter(fileDefinition(paths))
+            .map(createFileFromPath);
+
+        return onComplete(null, results);
     });
 
 };

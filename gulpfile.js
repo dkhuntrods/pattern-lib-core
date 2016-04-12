@@ -57,25 +57,27 @@ var getFiles = require('./src2/gulp-tasks/getFiles'),
     getBlocks = require('./src2/gulp-tasks/getBlocks'),
     createFileStore = require('./src2/lib/stores/files'),
     createBlockStore = require('./src2/lib/stores/blocks'),
+    patternFileBlockPair = require('./src2/lib/transformers/patternFileBlockPair'),
     joinBlocksAndFiles = require('./src2/lib/reducers/joinBlocksAndFiles'),
-    checkIsPatternBlock = require('./src2/lib/filters/patternBlock');
+    patternBlockFilter = require('./src2/lib/filters/patternBlock'),
+    filesFilter = require('./src2/lib/filters/file').getIsFileWithPaths;
 
 gulp.task('_info:files', function(cb) {
-    getFiles(path.join('blocks', 'core'), null, function(err, results){
+    getFiles(path.join('blocks', 'core'), filesFilter, function(err, results){
         console.log(results);
         cb();
     });
 });
 
 gulp.task('_info:blocks', function(cb) {
-    getBlocks(path.join('blocks', 'core'), checkIsPatternBlock, function(err, results){
+    getBlocks(path.join('blocks', 'core'), patternBlockFilter, function(err, results){
         console.log(results);
         cb();
     });
 });
 
 gulp.task('store:blocks', function(cb) {
-    getBlocks(path.join('blocks', 'core'), checkIsPatternBlock, function(err, results) {
+    getBlocks(path.join('blocks', 'core'), patternBlockFilter, function(err, results) {
         var blocks = createBlockStore(results);
         var block = blocks.getBlockByResolvedName('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
         console.log(block);
@@ -84,7 +86,7 @@ gulp.task('store:blocks', function(cb) {
 });
 
 gulp.task('store:files', function(cb) {
-    getFiles(path.join('blocks', 'core'), null, function(err, results) {
+    getFiles(path.join('blocks', 'core'), filesFilter, function(err, results) {
         var files = createFileStore(results);
         var file = files.getFileByResolvedName('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component/ff_module-dropdown-button-component.md');
         console.log(file);
@@ -92,19 +94,27 @@ gulp.task('store:files', function(cb) {
     });
 });
 
-gulp.task('add:files:blocks', function(cb) {
-    getFiles(path.join('blocks', 'core'), null, function(err, results) {
+gulp.task('join:files:blocks', function(cb) {
+    getFiles(path.join('blocks', 'core'), filesFilter, function(err, results) {
         var files = createFileStore(results);
-        getBlocks(path.join('blocks', 'core'), checkIsPatternBlock, function(err, results) {
+        getBlocks(path.join('blocks', 'core'), patternBlockFilter, function(err, results) {
             var blocks = createBlockStore(results);
-            // console.log(blocks.getBlockNames());
-            var join = joinBlocksAndFiles(files, blocks);
 
-            console.log(join.get('filesPerBlock'));
-            // console.log(join.get('blocksPerFile'));
+            var join = joinBlocksAndFiles(files, blocks, patternFileBlockPair);
+            // console.log(join.get('filesPerBlock'));
+
+            blocks.addFiles(join.get('filesPerBlock'));
+            files.addBlocks(join.get('blocksPerFile'));
 
             var block = blocks.getBlockByResolvedName('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
-            // console.log(block);
+            console.log('\n_____________');
+            console.log('\n_____________');
+            console.log(block);
+            var file = files.getFileByResolvedName('blocks/core/ff_module/ff_module-planner-grid-day/ff_module-planner-grid-day.md');
+            console.log('\n_____________');
+            console.log(file);
+            console.log('\n_____________');
+            console.log('\n_____________');
             cb();
         });
     });

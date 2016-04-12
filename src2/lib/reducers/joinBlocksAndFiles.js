@@ -1,27 +1,6 @@
 'use strict';
 
-var path = require('path'),
-    Immutable = require('immutable');
-
-
-function getFileBlock(blocks) {
-    return function(file) {
-        var filePath = file.get('resolvedName'),
-            testPath,
-            dir = filePath.split(path.sep);
-
-        dir.pop();
-
-        while (dir.length) {
-            testPath = dir.join(path.sep);
-            var block = blocks.getBlockByResolvedName(testPath);
-            if (block) return [filePath, block];
-            dir.pop();
-        }
-
-        return [filePath, null];
-    }
-}
+var Immutable = require('immutable');
 
 function assignFilesToBlocks(ob, value) {
     var block = value[1];
@@ -41,12 +20,12 @@ function assignBlocksToFiles(ob, value){
     return ob;
 }
 
-module.exports = function(files, blocks) {
+module.exports = function(files, blocks, joinMethod) {
 
     var fileBlocks = files.getFiles().toArray()
-        .map(getFileBlock(blocks));
+        .map(joinMethod(blocks));
 
-    return Immutable.Map({
+    return Immutable.fromJS({
         filesPerBlock: fileBlocks.reduce(assignFilesToBlocks, {}),
         blocksPerFile: fileBlocks.reduce(assignBlocksToFiles, {})
     });

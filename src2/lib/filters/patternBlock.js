@@ -2,7 +2,7 @@
 
 var path = require('path'),
     _ = require('lodash'),
-    dir = require('node-dir');
+    isFile = require('./file').isFile;
 
 function checkFilenameHidden(testPath) {
     var dirTest = '_';
@@ -18,35 +18,33 @@ function checkForMdFiles(testPath) {
     return false;
 }
 
-function checkIsPatternBlock(dirPath, cb) {
-    var hasFiles, hasSubDirs, directAncestorFiles = [],
-        isBlock = false;
+function getReduceByPath(testPath) {
+    return function reduceByPath(result, file) {
+        var test = file.replace(testPath + path.sep, '').split(path.sep);
+        // console.log('test:', testPath, test);
+        if (test.length === 1) result.push(file);
+        return result;
+    };
+}
 
-    dir.paths(dirPath, function(err, paths) {
-        if (err) return cb(false);
-        hasFiles = paths.files.length > 0;
-        hasSubDirs = paths.dirs.length > 0;
 
-        if (hasFiles) {
-            if (!hasSubDirs) {
-                directAncestorFiles = paths.files;
-            } else {
-                directAncestorFiles = _.reduce(paths.files, function(result, file, key) {
-                    var test = file.replace(dirPath + path.sep, '').split(path.sep);
-                    if (test.length === 1) result.push(file);
-                    return result;
-                }, []);
-            }
-        }
+function checkIsPatternBlockWithDirsAndFiles(paths) {
 
-        directAncestorFiles = _.chain(directAncestorFiles)
+    return function(testPath) {
+        var validBlockFiles = [];
+
+        if (isFile(testPath)) return false;
+        if (checkFilenameHidden(testPath)) return false;
+
+        validBlockFiles = _.chain(paths)
+            .reduce(getReduceByPath(testPath), [])
             .reject(checkFilenameHidden)
             .filter(checkForMdFiles)
             .value();
 
-        isBlock = directAncestorFiles.length > 0;
-        cb(isBlock);
-    });
+        return validBlockFiles.length > 0;
+    };
+
 }
 
-module.exports = checkIsPatternBlock;
+module.exports = checkIsPatternBlockWithDirsAndFiles;

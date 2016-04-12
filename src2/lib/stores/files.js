@@ -1,15 +1,7 @@
 'use strict';
 
-var Immutable = require('immutable'),
-    _ = require('lodash');
+var convertToMap = require('../transformers/fsObArrayToMap');
 
-
-function convertToMap(list){
-    return Immutable.Map(_.reduce(list, function(ob, map){
-        ob[map.get('resolvedName')] = map;
-        return ob;
-    }, {}));
-}
 
 module.exports = function(fileList){
     var _map = convertToMap(fileList);
@@ -19,6 +11,12 @@ module.exports = function(fileList){
         },
         getFiles: function(){
             return _map;
+        },
+        addBlocks: function(blockMap){
+            _map = _map.map(function(file, fileName){
+                file = file.set('blocks', blockMap.get(fileName));
+                return file;
+            });
         }
     };
 };

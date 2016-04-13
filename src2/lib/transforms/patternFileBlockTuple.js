@@ -5,7 +5,7 @@ var path = require('path');
 
 module.exports = function getFileBlock(blocks) {
     return function(file) {
-        var filePath = file.get('resolvedName'),
+        var filePath = file.get('id'),
             testPath,
             dir = filePath.split(path.sep);
 
@@ -13,7 +13,7 @@ module.exports = function getFileBlock(blocks) {
 
         while (dir.length) {
             testPath = dir.join(path.sep);
-            var block = blocks.getBlockByResolvedName(testPath);
+            var block = blocks.getById(testPath);
             if (block) return [filePath, block];
             dir.pop();
         }

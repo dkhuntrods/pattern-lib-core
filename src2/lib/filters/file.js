@@ -1,13 +1,14 @@
 'use strict';
 
-var path = require('path'),
-    fs = require('fs');
+var fs = require('fs');
 
 function isFile(testPath){
     return fs.statSync(testPath).isFile();
 }
 
-module.exports.isFile = isFile;
-module.exports.getIsFileWithPaths = function(paths){
-    return isFile;
+function isFileWithPaths(paths, testPath){
+    return isFile(testPath);
 }
+
+module.exports.isFile = isFile;
+module.exports.isFileWithPaths = isFileWithPaths;

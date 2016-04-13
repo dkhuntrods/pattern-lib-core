@@ -1,13 +1,14 @@
 'use strict';
 
-var convertToMap = require('../transformers/fsObArrayToMap');
+var convertToMap = require('../transforms/fsObArrayToMap');
 
 module.exports = function(blockList){
     var _map = convertToMap(blockList);
+    var _formats;
 
     return {
-        getBlockByResolvedName(resolvedBlockName){
-            return _map.get(resolvedBlockName);
+        getById(id){
+            return _map.get(id);
         },
         getBlocks: function(){
             return _map;

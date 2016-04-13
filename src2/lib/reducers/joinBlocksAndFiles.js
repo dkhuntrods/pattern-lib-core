@@ -5,7 +5,7 @@ var Immutable = require('immutable');
 function assignFilesToBlocks(ob, value) {
     var block = value[1];
     var filePath = value[0];
-    var blockId = (block && block.get('resolvedName')) || 'none';
+    var blockId = (block && block.get('id')) || 'none';
     ob[blockId] = (ob[blockId] || []);
     ob[blockId].push(filePath);
     return ob;
@@ -14,7 +14,7 @@ function assignFilesToBlocks(ob, value) {
 function assignBlocksToFiles(ob, value){
     var block = value[1];
     var filePath = value[0];
-    var blockId = (block && block.get('resolvedName')) || 'none';
+    var blockId = (block && block.get('id')) || 'none';
     ob[filePath] = (ob[filePath] || []);
     ob[filePath].push(blockId);
     return ob;

@@ -10,7 +10,7 @@ module.exports = function(filePath) {
 
     return Immutable.Map({
         name: fsInfo.base,
-        resolvedName: filePath,
+        id: filePath,
         dir: fsInfo.dir,
         blocks: Immutable.List()
     });

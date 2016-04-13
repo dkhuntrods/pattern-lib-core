@@ -28,23 +28,20 @@ function getReduceByPath(testPath) {
 }
 
 
-function checkIsPatternBlockWithDirsAndFiles(paths) {
+function isPatternBlock(paths, testPath) {
 
-    return function(testPath) {
-        var validBlockFiles = [];
+    var validBlockFiles = [];
 
-        if (isFile(testPath)) return false;
-        if (checkFilenameHidden(testPath)) return false;
+    if (isFile(testPath)) return false;
+    if (checkFilenameHidden(testPath)) return false;
 
-        validBlockFiles = _.chain(paths)
-            .reduce(getReduceByPath(testPath), [])
-            .reject(checkFilenameHidden)
-            .filter(checkForMdFiles)
-            .value();
+    validBlockFiles = _.chain(paths)
+        .reduce(getReduceByPath(testPath), [])
+        .reject(checkFilenameHidden)
+        .filter(checkForMdFiles)
+        .value();
 
-        return validBlockFiles.length > 0;
-    };
+    return validBlockFiles.length > 0;
+};
 
-}
-
-module.exports = checkIsPatternBlockWithDirsAndFiles;
+module.exports = isPatternBlock;

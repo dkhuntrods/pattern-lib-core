@@ -1,13 +1,13 @@
 'use strict';
 
-var convertToMap = require('../transformers/fsObArrayToMap');
+var convertToMap = require('../transforms/fsObArrayToMap');
 
 
 module.exports = function(fileList){
     var _map = convertToMap(fileList);
     return {
-        getFileByResolvedName: function(resolvedFileName){
-            return _map.get(resolvedFileName);
+        getById: function(id){
+            return _map.get(id);
         },
         getFiles: function(){
             return _map;

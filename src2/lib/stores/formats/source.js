@@ -3,9 +3,9 @@ var Immutable = require('immutable');
 
 module.exports = function(name, filter, transform){
 
-    return {
+    return Immutable.Map({
         name: name,
         filter: filter,
         transform: transform
-    };
+    });
 };

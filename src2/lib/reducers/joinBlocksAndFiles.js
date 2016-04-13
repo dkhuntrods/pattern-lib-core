@@ -26,7 +26,7 @@ module.exports = function(files, blocks, joinMethod) {
         .map(joinMethod(blocks));
 
     return Immutable.fromJS({
-        filesPerBlock: fileBlocks.reduce(assignFilesToBlocks, {}),
-        blocksPerFile: fileBlocks.reduce(assignBlocksToFiles, {})
+        fileIdsPerBlock: fileBlocks.reduce(assignFilesToBlocks, {}),
+        blockIdsPerFile: fileBlocks.reduce(assignBlocksToFiles, {})
     });
 };

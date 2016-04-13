@@ -13,13 +13,18 @@ module.exports = function(blockList){
         getBlocks: function(){
             return _map;
         },
-        getBlockNames: function(){
+        getBlockIds: function(){
             return _map.keySeq().toList();
         },
-        addFiles: function(fileMap){
+        addFileIds: function(fileMap){
             _map = _map.map(function(block, blockName){
-                block = block.set('files', fileMap.get(blockName));
+                block = block.set('fileIds', fileMap.get(blockName));
                 return block;
+            });
+        },
+        getBlocksByIdList: function(blockIdList) {
+            return blockIdList.map(function(blockId) {
+                return _map.get(blockId);
             });
         }
     };

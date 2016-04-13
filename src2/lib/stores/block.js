@@ -11,6 +11,6 @@ module.exports = function(dirPath) {
         name: fsInfo.base,
         id: dirPath,
         dir: fsInfo.dir,
-        files: Immutable.List()
+        fileIds: Immutable.List()
     });
 };

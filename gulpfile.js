@@ -64,33 +64,47 @@ var patternBlockMap = require('./src2/lib/transforms/patternBlock'),
     createBlockStore = require('./src2/lib/stores/blocks'),
 
     patternFileBlockTuple = require('./src2/lib/transforms/patternFileBlockTuple'),
-    joinBlocksAndFiles = require('./src2/lib/reducers/joinBlocksAndFiles');
+    joinBlocksAndFiles = require('./src2/lib/reducers/joinBlocksAndFiles'),
+    union = require('./src2/lib/stores/union');
+
+var util = require('util');
 
 
-
-gulp.task('join:files:blocks', function(cb) {
+gulp.task('union:patterns', function(cb) {
     mapFiles(path.join('blocks', 'core'), fileFilter, fileMap, function(err, results) {
-        var files = createFileStore(results);
+        var patternFiles = createFileStore(results);
         mapFiles(path.join('blocks', 'core'), patternBlockFilter, patternBlockMap, function(err, results) {
             if (err) return cb(err);
-            var blocks = createBlockStore(results);
+            var patternBlocks = createBlockStore(results);
 
-            var join = joinBlocksAndFiles(files, blocks, patternFileBlockTuple);
-            // console.log(join.get('filesPerBlock'));
+            var patternJoin = joinBlocksAndFiles(patternFiles, patternBlocks, patternFileBlockTuple);
+            // console.log(patternJoin.get('blockIdsPerFile'));
 
-            blocks.addFiles(join.get('filesPerBlock'));
-            files.addBlocks(join.get('blocksPerFile'));
+            patternBlocks.addFileIds(patternJoin.get('fileIdsPerBlock'));
+            patternFiles.addBlockIds(patternJoin.get('blockIdsPerFile'));
 
-            var block = blocks.getById('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
-            console.log('\n_____________');
-            console.log('\n_____________');
-            console.log(block);
-            var file = files.getById('blocks/core/ff_module/ff_module-planner-grid-day/ff_module-planner-grid-day.md');
-            console.log('\n_____________');
-            console.log(file);
-            console.log('\n_____________');
-            console.log('\n_____________');
-            cb(err);
+            var patternUnion = union(patternFiles, patternBlocks, null);
+            var dbcFiles = patternUnion.getFilesForBlockById('blocks/core/ff_module/ff_module-segments');
+            var dbcBlocks = patternUnion.getBlocksForFileById('blocks/core/ff_module/ff_module-segments/ff_module-segments.xsl');
+            console.log(util.inspect(dbcFiles, {
+                showHidden: false,
+                depth: 2
+            }));
+            console.log(util.inspect(dbcBlocks, {
+                showHidden: false,
+                depth: 2
+            }));
+
+            // var block = patternBlocks.getById('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
+            // console.log('\n_____________');
+            // console.log('\n_____________');
+            // console.log(block);
+            // var file = patternFiles.getById('blocks/core/ff_module/ff_module-planner-grid-day/ff_module-planner-grid-day.md');
+            // console.log('\n_____________');
+            // console.log(file);
+            // console.log('\n_____________');
+            // console.log('\n_____________');
+            cb(null);
         });
     });
 });

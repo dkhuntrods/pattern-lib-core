@@ -1,6 +1,7 @@
 'use strict';
 
-var convertToMap = require('../transforms/fsObArrayToMap');
+var Immutable = require('immutable'),
+convertToMap = require('../transforms/fsObArrayToMap');
 
 
 module.exports = function(fileList){
@@ -12,10 +13,15 @@ module.exports = function(fileList){
         getFiles: function(){
             return _map;
         },
-        addBlocks: function(blockMap){
-            _map = _map.map(function(file, fileName){
-                file = file.set('blocks', blockMap.get(fileName));
+        addBlockIds: function(blockMap){
+            _map = _map.map(function(file, fileId){
+                file = file.set('blockIds', blockMap.get(fileId));
                 return file;
+            });
+        },
+        getFilesByIdList: function(fileIdList) {
+            return fileIdList.map(function(fileId) {
+                return _map.get(fileId);
             });
         }
     };

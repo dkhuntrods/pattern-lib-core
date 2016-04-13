@@ -8,8 +8,8 @@ module.exports = function(name){
 
     return {
         name: name,
-        addSource: function(name, method){
-            _sources = _sources.set(name, method);
+        addSource: function(name, source){
+            _sources = _sources.set(name, source);
             return this;
         },
         getSource: function(name){

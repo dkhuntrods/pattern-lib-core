@@ -64,10 +64,12 @@ var patternBlockMap = require('./src2/lib/transforms/patternBlock'),
     createBlockStore = require('./src2/lib/stores/blocks'),
 
     patternFileBlockTuple = require('./src2/lib/transforms/patternFileBlockTuple'),
-    joinBlocksAndFiles = require('./src2/lib/reducers/joinBlocksAndFiles'),
-    union = require('./src2/lib/stores/union');
+    associateBlocksAndFiles = require('./src2/lib/reducers/associateBlocksAndFiles'),
+    collection = require('./src2/lib/stores/collection'),
+    patternStates = require('./src2/lib/reducers/patternStates')();
 
 var util = require('util');
+var Immutable = require('immutable');
 
 
 gulp.task('union:patterns', function(cb) {
@@ -77,25 +79,35 @@ gulp.task('union:patterns', function(cb) {
             if (err) return cb(err);
             var patternBlocks = createBlockStore(results);
 
-            var patternJoin = joinBlocksAndFiles(patternFiles, patternBlocks, patternFileBlockTuple);
-            // console.log(patternJoin.get('blockIdsPerFile'));
+            var patternJoin = associateBlocksAndFiles(patternFileBlockTuple);
+            var patternCollection = collection();
 
-            patternBlocks.addFileIds(patternJoin.get('fileIdsPerBlock'));
-            patternFiles.addBlockIds(patternJoin.get('blockIdsPerFile'));
+            patternBlocks = patternCollection.addFileIds(patternBlocks, patternJoin.getFileIdsPerBlock(patternFiles, patternBlocks));
+            patternFiles = patternCollection.addBlockIds(patternFiles, patternJoin.getBlockIdsPerFile(patternFiles, patternBlocks));
 
-            var patternUnion = union(patternFiles, patternBlocks, null);
-            var dbcFiles = patternUnion.getFilesForBlockById('blocks/core/ff_module/ff_module-segments');
-            var dbcBlocks = patternUnion.getBlocksForFileById('blocks/core/ff_module/ff_module-segments/ff_module-segments.xsl');
-            console.log(util.inspect(dbcFiles, {
-                showHidden: false,
-                depth: 2
-            }));
-            console.log(util.inspect(dbcBlocks, {
-                showHidden: false,
-                depth: 2
-            }));
 
-            // var block = patternBlocks.getById('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
+
+            var dbcFiles = patternCollection.getFilesForBlockById('blocks/core/ff_module/ff_module-date-picker-jumpto', patternFiles, patternBlocks);
+            var dbcBlocks = patternCollection.getBlocksForFileById('blocks/core/ff_module/ff_module-segments/ff_module-segments.xsl', patternFiles, patternBlocks);
+
+            // console.log(util.inspect(dbcFiles, {
+            //     showHidden: false,
+            //     depth: 2
+            // }));
+            // console.log(util.inspect(dbcBlocks, {
+            //     showHidden: false,
+            //     depth: 2
+            // }));
+
+            // console.log(patternStates.get('lib').get('js').get('entry').get('apply'));
+
+            var block = patternBlocks.get('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
+
+            var src = patternCollection.getBlockSources(patternStates.get('lib'), dbcFiles, 'js', 'entry');
+            console.log(dbcFiles, src);
+            // patternCollection.set('state', 'lib');
+            // var jsentryVal = patternCollection.get(block, 'lib','js', 'entry');
+
             // console.log('\n_____________');
             // console.log('\n_____________');
             // console.log(block);
@@ -109,11 +121,11 @@ gulp.task('union:patterns', function(cb) {
     });
 });
 
-gulp.task('_info:files', function(cb) {
-    mapFiles(path.join('blocks', 'core'), fileFilter, fileMap, function(err, results){
-        if (err) return cb(err);
-    });
-});
+// gulp.task('_info:files', function(cb) {
+//     mapFiles(path.join('blocks', 'core'), fileFilter, fileMap, function(err, results){
+//         if (err) return cb(err);
+//     });
+// });
 
 // gulp.task('_info:blocks', function(cb) {
 //     mapFiles(path.join('blocks', 'core'), patternBlockFilter, function(err, results){

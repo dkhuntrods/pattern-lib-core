@@ -2,7 +2,7 @@
 
 var path = require('path');
 
-var source = require('../stores/source');
+var source = require('../transforms/source');
 
 var Immutable = require('immutable');
 
@@ -17,7 +17,7 @@ function libJsEntryTransform(ob, file) {
 
 
 module.exports = function() {
-    var libJsEntrySource = source('entry', libJsEntryFilter, libJsEntryTransform);
+    var libJsEntrySource = source(libJsEntryFilter, libJsEntryTransform);
 
     return Immutable.fromJS({
         'lib': {
@@ -25,5 +25,5 @@ module.exports = function() {
                 'entry': libJsEntrySource
             }
         }
-    })
+    });
 }

@@ -64,9 +64,9 @@ var patternBlockMap = require('./src2/lib/transforms/patternBlock'),
     createBlockStore = require('./src2/lib/stores/blocks'),
 
     patternFileBlockTuple = require('./src2/lib/transforms/patternFileBlockTuple'),
-    associateBlocksAndFiles = require('./src2/lib/reducers/associateBlocksAndFiles'),
-    collection = require('./src2/lib/stores/collection'),
-    patternStates = require('./src2/lib/reducers/patternStates')();
+    connectBlocksAndFiles = require('./src2/lib/connectors/blocksAndFiles'),
+    collection = require('./src2/lib/connectors/collection'),
+    patternStates = require('./src2/lib/states/pattern')();
 
 var util = require('util');
 var Immutable = require('immutable');
@@ -79,13 +79,11 @@ gulp.task('union:patterns', function(cb) {
             if (err) return cb(err);
             var patternBlocks = createBlockStore(results);
 
-            var patternJoin = associateBlocksAndFiles(patternFileBlockTuple);
+            var patternJoin = connectBlocksAndFiles(patternFileBlockTuple);
             var patternCollection = collection();
 
             patternBlocks = patternCollection.addFileIds(patternBlocks, patternJoin.getFileIdsPerBlock(patternFiles, patternBlocks));
             patternFiles = patternCollection.addBlockIds(patternFiles, patternJoin.getBlockIdsPerFile(patternFiles, patternBlocks));
-
-
 
             var dbcFiles = patternCollection.getFilesForBlockById('blocks/core/ff_module/ff_module-date-picker-jumpto', patternFiles, patternBlocks);
             var dbcBlocks = patternCollection.getBlocksForFileById('blocks/core/ff_module/ff_module-segments/ff_module-segments.xsl', patternFiles, patternBlocks);

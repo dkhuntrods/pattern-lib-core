@@ -11,7 +11,7 @@ module.exports = function() {
             return this.getBlocksByIdList(blocks, files.getIn([fileId,'blockIds']));
         },
         getBlockSources: function(state, blockFiles, formatId, sourceId){
-            return state.getIn([formatId, sourceId, 'apply'])(blockFiles);
+            return state.getIn([formatId, sourceId])(blockFiles);
         },
         addFileIds: function(blocks, fileMap){
             return blocks.map(function(block, blockName){

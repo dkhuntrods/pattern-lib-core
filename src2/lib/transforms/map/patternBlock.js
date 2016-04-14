@@ -1,6 +1,6 @@
 'use strict';
 
-var createBlock = require('../stores/block');
+var createBlock = require('../../stores/block');
 
 function createBlockFromPath(dirPath){
     try {

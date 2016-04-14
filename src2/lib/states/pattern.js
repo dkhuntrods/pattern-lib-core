@@ -2,7 +2,7 @@
 
 var path = require('path');
 
-var source = require('../transforms/source');
+var source = require('../transforms/map/source');
 
 var Immutable = require('immutable');
 
@@ -26,4 +26,4 @@ module.exports = function() {
             }
         }
     });
-}
+};

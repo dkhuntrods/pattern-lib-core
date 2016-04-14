@@ -1,6 +1,6 @@
 'use strict';
 
-var convertToMap = require('../transforms/fsObArrayToMap');
+var convertToMap = require('../transforms/map/fsObArrayToMap');
 
 
 module.exports = function(fileList){

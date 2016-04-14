@@ -1,6 +1,6 @@
 'use strict';
 
-var createFile = require('../stores/file');
+var createFile = require('../../stores/file');
 
 function createFileFromPath(filePath){
     try {

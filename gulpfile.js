@@ -53,40 +53,48 @@ gulp.task('info', ['info:blocks', 'info:pages']);
 
 
 
-var patternBlockMap = require('./src2/lib/transforms/patternBlock'),
+var patternBlockMap = require('./src2/lib/transforms/map/patternBlock'),
     patternBlockFilter = require('./src2/lib/filters/patternBlock'),
 
-    fileMap = require('./src2/lib/transforms/file'),
+    fileMap = require('./src2/lib/transforms/map/file'),
     fileFilter = require('./src2/lib/filters/file').isFileWithPaths,
 
     mapFiles = require('./src2/gulp-tasks/mapFiles'),
     createFileStore = require('./src2/lib/stores/files'),
     createBlockStore = require('./src2/lib/stores/blocks'),
 
-    patternFileBlockTuple = require('./src2/lib/transforms/patternFileBlockTuple'),
-    connectBlocksAndFiles = require('./src2/lib/connectors/blocksAndFiles'),
-    collection = require('./src2/lib/connectors/collection'),
+    // patternFileBlockTuple = require('./src2/lib/transforms/patternFileBlockTuple'),
+    // blockAndFileConnector = require('./src2/lib/connectors/blocksAndFiles'),
+    connector = require('./src2/lib/connectors/connector'),
+    collection = require('./src2/lib/stores/collection'),
     patternStates = require('./src2/lib/states/pattern')();
 
 var util = require('util');
 var Immutable = require('immutable');
 
 
-gulp.task('union:patterns', function(cb) {
+gulp.task('collect:patterns', function(cb) {
     mapFiles(path.join('blocks', 'core'), fileFilter, fileMap, function(err, results) {
         var patternFiles = createFileStore(results);
         mapFiles(path.join('blocks', 'core'), patternBlockFilter, patternBlockMap, function(err, results) {
             if (err) return cb(err);
             var patternBlocks = createBlockStore(results);
 
-            var patternJoin = connectBlocksAndFiles(patternFileBlockTuple);
-            var patternCollection = collection();
+            var patternConnector = connector();
 
-            patternBlocks = patternCollection.addFileIds(patternBlocks, patternJoin.getFileIdsPerBlock(patternFiles, patternBlocks));
-            patternFiles = patternCollection.addBlockIds(patternFiles, patternJoin.getBlockIdsPerFile(patternFiles, patternBlocks));
 
-            var dbcFiles = patternCollection.getFilesForBlockById('blocks/core/ff_module/ff_module-date-picker-jumpto', patternFiles, patternBlocks);
-            var dbcBlocks = patternCollection.getBlocksForFileById('blocks/core/ff_module/ff_module-segments/ff_module-segments.xsl', patternFiles, patternBlocks);
+            // var patternJoin = blockAndFileConnector(patternFileBlockTuple);
+
+
+            patternBlocks = patternConnector.addFileIds(patternBlocks, patternFiles);
+            patternFiles = patternConnector.addBlockIds(patternFiles, patternBlocks);
+
+            var patternCollection = collection(patternFiles, patternBlocks, patternStates);
+
+            // console.log(patternCollection.get('states'));
+
+            var dbcFiles = patternConnector.getFilesForBlockById('blocks/core/ff_module/ff_module-date-picker-jumpto', patternFiles, patternBlocks);
+            var dbcBlocks = patternConnector.getBlocksForFileById('blocks/core/ff_module/ff_module-segments/ff_module-segments.xsl', patternFiles, patternBlocks);
 
             // console.log(util.inspect(dbcFiles, {
             //     showHidden: false,
@@ -101,10 +109,14 @@ gulp.task('union:patterns', function(cb) {
 
             var block = patternBlocks.get('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
 
-            var src = patternCollection.getBlockSources(patternStates.get('lib'), dbcFiles, 'js', 'entry');
-            console.log(dbcFiles, src);
-            // patternCollection.set('state', 'lib');
-            // var jsentryVal = patternCollection.get(block, 'lib','js', 'entry');
+            var alt = patternConnector.getBlockSourcesFromCollection(patternCollection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'js', 'entry']);
+            var src = patternConnector.getBlockSources(patternStates.get('lib'), dbcFiles, 'js', 'entry');
+
+            console.log(alt);
+            console.log(src);
+
+            // patternConnector.set('state', 'lib');
+            // var jsentryVal = patternConnector.get(block, 'lib','js', 'entry');
 
             // console.log('\n_____________');
             // console.log('\n_____________');

@@ -18,7 +18,7 @@ function pathToObject(sourcePath, result, path) {
         .replace('.js', '') // remove file extension
         .split(nodePath.sep);
 
-    return assignPaths({}, segments[0], 0, segments, require(path));
+    return assignPaths(result, segments[0], 0, segments, require(path));
 
 }
 

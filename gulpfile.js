@@ -52,35 +52,41 @@ gulp.task('info', ['info:blocks', 'info:pages']);
 
 
 
-
 var generator = require('./src2/lib/collection/generator'),
-    connector = require('./src2/lib/collection/connector');
+    connector = require('./src2/lib/collection/connector'),
+    Immutable = require('immutable');
 
-gulp.task('sources', function(){
-
-    var findSources = require('./src2/lib/collection/states');
-    findSources(function(err, results){
-        console.log(results);
-    });
+var tSite = Immutable.Map({
+    title: 'Firefly test title',
+    themes: ['core', 'melody']
 });
 
-gulp.task('definitions', function(){
+gulp.task('test:generate', function(cb){
+    var Immutable = require('immutable');
 
-    var findDefinitions = require('./src2/lib/collection/definitions');
-    findDefinitions(function(err, results){
-        console.log(results.get('pattern').toJS());
-    });
-});
-
-gulp.task('generate:pattern', function(cb){
     generator(path.join('blocks', 'core'), 'pattern', function(err, collection){
         if (err) return cb(err);
 
-        var alt = connector.getBlockSourcesFromCollection(collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'js', 'entry']);
-            // var src = patternConnector.getBlockSources(patternStates.get('lib'), dbcFiles, 'js', 'entry');
+        var alt = connector.getBlockSourcesFromCollection(tSite, collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'js', 'entry']);
+        var test = Immutable.Map({ path: '/js/ff_module-date-picker-jumpto.js' });
+        console.log(test.equals(alt), alt.toJS());
 
-            console.log(alt);
-            // console.log(src);
+        cb(err);
+    });
+});
+
+gulp.task('generate:xsl', function(cb){
+
+    generator(path.join('blocks', 'core'), 'pattern', function(err, collection){
+        if (err) return cb(err);
+
+        var xsl = connector.getBlockSourcesFromCollection(tSite, collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'xsl', 'entry']);
+        console.log(xsl);
+        console.log(xsl.get('context'));
+
+        // console.log(collection.get('states').toJS());
+
+        // console.log(collection.get('blocks').keySeq().toJS());
 
         cb(err);
     });

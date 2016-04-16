@@ -11,7 +11,11 @@ module.exports = function(onComplete) {
 
     dir.paths(sourcePath, function(err, paths) {
         if (err) return onComplete(err);
-        var results = paths.files.reduce(reducePathsToObject.bind(null, sourcePath), {});
+        var results = paths.files
+            .filter(function(filePath){
+                return /.tern-port/.test(filePath) === false;
+            })
+            .reduce(reducePathsToObject.bind(null, sourcePath), {});
 
         return onComplete(null, Immutable.fromJS(results));
     });

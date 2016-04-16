@@ -24,18 +24,22 @@ function getFilesForBlockById(blockId, files, blocks) {
     return getFilesByIdList(files, blocks.getIn([blockId, 'fileIds']));
 }
 
-function getBlocksForFileById(fileId, files, blocks) {
-    return getBlocksByIdList(blocks, files.getIn([fileId, 'blockIds']));
+// function getBlocksForFileById(fileId, files, blocks) {
+//     return getBlocksByIdList(blocks, files.getIn([fileId, 'blockIds']));
+// }
+
+function getBlocksByFileIdFromCollection(collection, fileId){
+    return getBlocksByIdList(collection.get('blocks'), collection.getIn(['files',fileId, 'blockIds']));
 }
 
-function getBlockSources(state, blockFiles, formatId, sourceId) {
-    return state.getIn([formatId, sourceId])(blockFiles);
-}
+// function getBlockSources(state, blockFiles, formatId, sourceId) {
+//     return state.getIn([formatId, sourceId])(blockFiles);
+// }
 
-function getBlockSourcesFromCollection(collection, blockId, statePath) {
+function getBlockSourcesFromCollection(site, collection, blockId, statePath) {
     var filterMethod = collection.getIn(['states'].concat(statePath));
     var blockFiles = getFilesByIdList(collection.get('files'), collection.getIn(['blocks', blockId, 'fileIds']));
-    return filterMethod(blockFiles);
+    return filterMethod(site, collection, blockFiles);
 }
 
 function addFileIds(blocks, files) {
@@ -70,9 +74,10 @@ module.exports = {
     getFileIdsPerBlock: getFileIdsPerBlock,
     getBlockIdsPerFile: getBlockIdsPerFile,
     getFilesForBlockById: getFilesForBlockById,
-    getBlocksForFileById: getBlocksForFileById,
-    getBlockSources: getBlockSources,
+    // getBlocksForFileById: getBlocksForFileById,
+    // getBlockSources: getBlockSources,
     getBlockSourcesFromCollection: getBlockSourcesFromCollection,
+    getBlocksByFileIdFromCollection: getBlocksByFileIdFromCollection,
     addFileIds: addFileIds,
     getBlocksByIdList: getBlocksByIdList,
     addBlockIds: addBlockIds,

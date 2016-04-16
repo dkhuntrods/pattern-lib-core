@@ -53,115 +53,38 @@ gulp.task('info', ['info:blocks', 'info:pages']);
 
 
 
-var patternBlockMap = require('./src2/lib/transforms/map/patternBlock'),
-    patternBlockFilter = require('./src2/lib/filters/patternBlock'),
+var generator = require('./src2/lib/collection/generator'),
+    connector = require('./src2/lib/collection/connector');
 
-    fileMap = require('./src2/lib/transforms/map/file'),
-    fileFilter = require('./src2/lib/filters/file').isFileWithPaths,
+gulp.task('sources', function(){
 
-    mapFiles = require('./src2/gulp-tasks/mapFiles'),
-    createFileStore = require('./src2/lib/stores/files'),
-    createBlockStore = require('./src2/lib/stores/blocks'),
-
-    // patternFileBlockTuple = require('./src2/lib/transforms/patternFileBlockTuple'),
-    // blockAndFileConnector = require('./src2/lib/connectors/blocksAndFiles'),
-    connector = require('./src2/lib/connectors/connector'),
-    collection = require('./src2/lib/stores/collection'),
-    patternStates = require('./src2/lib/states/pattern')();
-
-var util = require('util');
-var Immutable = require('immutable');
-
-
-gulp.task('collect:patterns', function(cb) {
-    mapFiles(path.join('blocks', 'core'), fileFilter, fileMap, function(err, results) {
-        var patternFiles = createFileStore(results);
-        mapFiles(path.join('blocks', 'core'), patternBlockFilter, patternBlockMap, function(err, results) {
-            if (err) return cb(err);
-            var patternBlocks = createBlockStore(results);
-
-            var patternConnector = connector();
-
-
-            // var patternJoin = blockAndFileConnector(patternFileBlockTuple);
-
-
-            patternBlocks = patternConnector.addFileIds(patternBlocks, patternFiles);
-            patternFiles = patternConnector.addBlockIds(patternFiles, patternBlocks);
-
-            var patternCollection = collection(patternFiles, patternBlocks, patternStates);
-
-            // console.log(patternCollection.get('states'));
-
-            var dbcFiles = patternConnector.getFilesForBlockById('blocks/core/ff_module/ff_module-date-picker-jumpto', patternFiles, patternBlocks);
-            var dbcBlocks = patternConnector.getBlocksForFileById('blocks/core/ff_module/ff_module-segments/ff_module-segments.xsl', patternFiles, patternBlocks);
-
-            // console.log(util.inspect(dbcFiles, {
-            //     showHidden: false,
-            //     depth: 2
-            // }));
-            // console.log(util.inspect(dbcBlocks, {
-            //     showHidden: false,
-            //     depth: 2
-            // }));
-
-            // console.log(patternStates.get('lib').get('js').get('entry').get('apply'));
-
-            var block = patternBlocks.get('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
-
-            var alt = patternConnector.getBlockSourcesFromCollection(patternCollection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'js', 'entry']);
-            var src = patternConnector.getBlockSources(patternStates.get('lib'), dbcFiles, 'js', 'entry');
-
-            console.log(alt);
-            console.log(src);
-
-            // patternConnector.set('state', 'lib');
-            // var jsentryVal = patternConnector.get(block, 'lib','js', 'entry');
-
-            // console.log('\n_____________');
-            // console.log('\n_____________');
-            // console.log(block);
-            // var file = patternFiles.getById('blocks/core/ff_module/ff_module-planner-grid-day/ff_module-planner-grid-day.md');
-            // console.log('\n_____________');
-            // console.log(file);
-            // console.log('\n_____________');
-            // console.log('\n_____________');
-            cb(null);
-        });
+    var findSources = require('./src2/lib/collection/states');
+    findSources(function(err, results){
+        console.log(results);
     });
 });
 
-// gulp.task('_info:files', function(cb) {
-//     mapFiles(path.join('blocks', 'core'), fileFilter, fileMap, function(err, results){
-//         if (err) return cb(err);
-//     });
-// });
+gulp.task('definitions', function(){
 
-// gulp.task('_info:blocks', function(cb) {
-//     mapFiles(path.join('blocks', 'core'), patternBlockFilter, function(err, results){
-//         console.log(results);
-//         cb();
-//     });
-// });
+    var findDefinitions = require('./src2/lib/collection/definitions');
+    findDefinitions(function(err, results){
+        console.log(results.get('pattern').toJS());
+    });
+});
 
-// gulp.task('store:blocks', function(cb) {
-//     mapFiles(path.join('blocks', 'core'), patternBlockFilter, function(err, results) {
-//         var blocks = createBlockStore(results);
-//         var block = blocks.getBlockByResolvedName('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component');
-//         console.log(block);
-//         cb();
-//     });
-// });
+gulp.task('generate:pattern', function(cb){
+    generator(path.join('blocks', 'core'), 'pattern', function(err, collection){
+        if (err) return cb(err);
 
-// gulp.task('store:files', function(cb) {
-//     mapFiles(path.join('blocks', 'core'), fileFilter, function(err, results) {
-//         var files = createFileStore(results);
-//         var file = files.getFileByResolvedName('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component/ff_module-dropdown-button-component.md');
-//         console.log(file);
-//         cb();
-//     });
-// });
+        var alt = connector.getBlockSourcesFromCollection(collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'js', 'entry']);
+            // var src = patternConnector.getBlockSources(patternStates.get('lib'), dbcFiles, 'js', 'entry');
 
+            console.log(alt);
+            // console.log(src);
+
+        cb(err);
+    });
+});
 
 
 /**

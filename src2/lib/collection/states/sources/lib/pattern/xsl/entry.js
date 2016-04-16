@@ -20,7 +20,7 @@ function getLibXSLTContext(site, file, block, collection) {
         data: { title: 'one', content: 'Some nice things' },
         site: {
             title: site.get('title'),
-            themes: site.get('themes'),
+            themes: site.get('themes').toJS(),
             blockIds: collection.get('blocks').keySeq().toJS()
         }
     };

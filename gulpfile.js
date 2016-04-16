@@ -56,7 +56,7 @@ var generator = require('./src2/lib/collection/generator'),
     connector = require('./src2/lib/collection/connector'),
     Immutable = require('immutable');
 
-var tSite = Immutable.Map({
+var tSite = Immutable.fromJS({
     title: 'Firefly test title',
     themes: ['core', 'melody']
 });
@@ -64,25 +64,26 @@ var tSite = Immutable.Map({
 gulp.task('test:generate', function(cb){
     var Immutable = require('immutable');
 
-    generator(path.join('blocks', 'core'), 'pattern', function(err, collection){
+    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, collection){
         if (err) return cb(err);
 
-        var alt = connector.getBlockSourcesFromCollection(tSite, collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'js', 'entry']);
-        var test = Immutable.Map({ path: '/js/ff_module-date-picker-jumpto.js' });
+        var alt = connector.getBlockSourcesFromCollection(tSite, collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['js', 'entry']);
+        var test = Immutable.Map({ path: '/js/ff_module-date-picker-jumpto.js', reference: 'ffModuleDatePickerJumpto' });
         console.log(test.equals(alt), alt.toJS());
 
         cb(err);
     });
 });
 
-gulp.task('generate:xsl', function(cb){
+var collection;
+gulp.task('generate:collection:pattern', function(cb){
 
-    generator(path.join('blocks', 'core'), 'pattern', function(err, collection){
+    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, _collection){
         if (err) return cb(err);
-
-        var xsl = connector.getBlockSourcesFromCollection(tSite, collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'xsl', 'entry']);
-        console.log(xsl);
-        console.log(xsl.get('context'));
+        collection = _collection;
+        // var xsl = connector.getBlockSourcesFromCollection(tSite, _collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'xsl', 'entry']);
+        // console.log(xsl);
+        // console.log(xsl.get('context'));
 
         // console.log(collection.get('states').toJS());
 
@@ -92,6 +93,26 @@ gulp.task('generate:xsl', function(cb){
     });
 });
 
+gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(){
+    var f = connector.getFileFormatsById(collection, ['js']);
+
+    // return gulp.src(src)
+    //     .pipe(plugins.plumber({
+    //         errorHandler: function(err) {
+    //             console.log(err);
+    //         }
+    //     }))
+    //     .pipe(plugins.frontMatter({
+    //         property: 'data',
+    //         remove: true
+    //     }))
+    //     .pipe(plugins.markdown())
+    //     .pipe(mdtoXSLT(mdtoXSLTOptions))
+    //     .pipe(plugins.rename({
+    //         extname: '.html'
+    //     }))
+    //     .pipe(gulp.dest(dest));
+})
 
 /**
  * HTML/XSLT

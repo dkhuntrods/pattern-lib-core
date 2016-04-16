@@ -13,21 +13,21 @@ var mapFiles = require('../transforms/map/files'),
 function definitionAsync(definitionId, callback) {
     getDefinitions(function(err, definitions) {
         if (err) return callback(err);
-        callback(null, definitions.get(definitionId));
+        callback(null, definitions.getIn(definitionId));
     });
 }
 
 function filesAsync(dirPath, callback) {
-    mapFiles(dirPath, fileFilter, fileMap, function(err, filePaths) {
+    mapFiles(dirPath, fileFilter, fileMap, function(err, files) {
         if (err) return callback(err);
-        callback(null, fileStore(filePaths));
+        callback(null, fileStore(files));
     });
 }
 
-function stateAsync(definitionId, callback) {
+function statesAsync(definitionId, callback) {
     getStates(function(err, states) {
         if (err) return callback(err);
-        callback(null, states.get(definitionId));
+        callback(null, states.getIn(definitionId));
     });
 }
 
@@ -52,13 +52,13 @@ function blocksAsync(dirPath, callback, results) {
 function collectionAsync(callback, results) {
     var blocks = results.blocks,
         files = results.files,
-        state = results.state,
+        states = results.states,
         collection;
 
     try {
         blocks = connector.addFileIds(blocks, files);
         files = connector.addBlockIds(files, blocks);
-        collection = createCollection(files, blocks, state);
+        collection = createCollection(files, blocks, states);
     } catch (e) {
         return callback(e);
     }
@@ -71,13 +71,13 @@ function asyncComplete(onComplete, definitionId, err, results) {
 }
 
 module.exports = function(dirPath, definitionId, onComplete) {
-
+    definitionId = [].concat(definitionId);
     async.auto({
         definition: definitionAsync.bind(null, definitionId),
         files: filesAsync.bind(null, dirPath),
-        state: stateAsync.bind(null, definitionId),
+        states: statesAsync.bind(null, definitionId),
         blocks: ['definition', blocksAsync.bind(null, dirPath)],
-        collection: ['files', 'blocks', 'state', collectionAsync]
+        collection: ['files', 'blocks', 'states', collectionAsync]
     }, asyncComplete.bind(null, onComplete, definitionId));
 
 };

@@ -70,6 +70,11 @@ function getFilesByIdList(files, fileIdList) {
     });
 }
 
+function getFileListByFormat(collection, statePath){
+    var state = collection.getIn(['states'].concat(statePath));
+    console.log(state);
+}
+
 module.exports = {
     getFileIdsPerBlock: getFileIdsPerBlock,
     getBlockIdsPerFile: getBlockIdsPerFile,
@@ -81,5 +86,6 @@ module.exports = {
     addFileIds: addFileIds,
     getBlocksByIdList: getBlocksByIdList,
     addBlockIds: addBlockIds,
-    getFilesByIdList: getFilesByIdList
+    getFilesByIdList: getFilesByIdList,
+    getFileListByFormat: getFileListByFormat
 };

@@ -36,13 +36,13 @@ function getBlocksByFileIdFromCollection(collection, fileId){
 //     return state.getIn([formatId, sourceId])(blockFiles);
 // }
 
-function getBlockSourcesFromCollection(site, collection, blockId, statePath) {
+function getBlockSourcesFromCollection(site, collection, statePath, blockId) {
     var transform = collection.getIn(['states'].concat(statePath).concat('apply'));
     var blockFiles = getFilesByIdList(collection.get('files'), collection.getIn(['blocks', blockId, 'fileIds']));
     return transform(site, collection, blockFiles);
 }
 
-function getFileSourcesById(site, collection, fileId, statePath) {
+function getFileSourcesById(site, collection, statePath, fileId) {
     var transform = collection.getIn(['states'].concat(statePath).concat('apply'));
     var file = Immutable.List([(collection.getIn(['files', fileId]))]);
     return transform(site, collection, file);

@@ -67,7 +67,7 @@ gulp.task('test:generate', function(cb) {
     generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, collection) {
         if (err) return cb(err);
 
-        var alt = connector.getBlockSourcesFromCollection(tSite, collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['js', 'entry']);
+        var alt = connector.getBlockSourcesFromCollection(tSite, collection, ['js', 'entry'], 'blocks/core/ff_module/ff_module-date-picker-jumpto');
         var test = { path: '/js/ff_module-date-picker-jumpto.js', reference: 'ffModuleDatePickerJumpto' };
         console.log(test, alt);
 
@@ -81,7 +81,7 @@ gulp.task('generate:collection:pattern', function(cb) {
     generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, _collection) {
         if (err) return cb(err);
         collection = _collection;
-        // var xsl = connector.getBlockSourcesFromCollection(tSite, _collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'xsl', 'entry']);
+        // var xsl = connector.getBlockSourcesFromCollection(tSite, _collection, ['lib', 'xsl', 'entry'], 'blocks/core/ff_module/ff_module-date-picker-jumpto');
         // console.log(xsl);
         // console.log(xsl.get('context'));
 
@@ -103,12 +103,12 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
     // var file = connector.getFilesByIdList(collection.get('files'), ['blocks/core/ff_module/ff_module-columnar-list/ff_module-columnar-list.md']);
     // console.log(file);
 
-    // var fileSrc = connector.getFileSourcesById(tSite, collection, 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md', ['md', 'entry']);
+    // var fileSrc = connector.getFileSourcesById(tSite, collection, statePath, 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md');
     // console.log(fileSrc);
 
-    var getFileSourcesById = connector.getFileSourcesById.bind(null, tSite, collection);
+    var getFileSourcesById = connector.getFileSourcesById.bind(null, tSite, collection, statePath);
 
-    console.log(getFileSourcesById('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md', statePath).context);
+    console.log(getFileSourcesById('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md').context);
 
     // return gulp.src(files.keySeq().toArray())
     //     .pipe(plugins.plumber({
@@ -127,17 +127,17 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
     //     .pipe(mdtoXSLT({
     //         xslTemplatePath: function getXSLTemplatePath(fileBuffer, context) {
     //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
-    //             return getFileSourcesById(filePath, statePath).xslTemplatePath;
+    //             return getFileSourcesById(filePath).xslTemplatePath;
     //         },
     //         xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
     //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
-    //             return getFileSourcesById(filePath, statePath).xmlTemplatePath;
+    //             return getFileSourcesById(filePath).xmlTemplatePath;
     //         },
     //         renderer: swig,
     //         fileContext: function(fileBuffer){
     //             // console.log('>>>', fileBuffer.path.replace(process.cwd()+path.sep, ''));
     //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
-    //             return getFileSourcesById(filePath, statePath).context;
+    //             return getFileSourcesById(filePath).context;
     //         },
     //         debug: false
     //     }))

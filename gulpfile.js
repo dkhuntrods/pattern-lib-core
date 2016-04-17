@@ -61,24 +61,24 @@ var tSite = Immutable.fromJS({
     themes: ['core', 'melody']
 });
 
-gulp.task('test:generate', function(cb){
+gulp.task('test:generate', function(cb) {
     var Immutable = require('immutable');
 
-    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, collection){
+    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, collection) {
         if (err) return cb(err);
 
         var alt = connector.getBlockSourcesFromCollection(tSite, collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['js', 'entry']);
-        var test = Immutable.Map({ path: '/js/ff_module-date-picker-jumpto.js', reference: 'ffModuleDatePickerJumpto' });
-        console.log(test.equals(alt), alt.toJS());
+        var test = { path: '/js/ff_module-date-picker-jumpto.js', reference: 'ffModuleDatePickerJumpto' };
+        console.log(test, alt);
 
         cb(err);
     });
 });
 
 var collection;
-gulp.task('generate:collection:pattern', function(cb){
+gulp.task('generate:collection:pattern', function(cb) {
 
-    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, _collection){
+    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, _collection) {
         if (err) return cb(err);
         collection = _collection;
         // var xsl = connector.getBlockSourcesFromCollection(tSite, _collection, 'blocks/core/ff_module/ff_module-date-picker-jumpto', ['lib', 'xsl', 'entry']);
@@ -93,10 +93,24 @@ gulp.task('generate:collection:pattern', function(cb){
     });
 });
 
-gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(){
-    var f = connector.getFileFormatsById(collection, ['js']);
+var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
 
-    // return gulp.src(src)
+gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
+    var statePath = ['md', 'entry'];
+
+    var files = connector.getFileListByFormat(tSite, collection, statePath);
+    // console.log(files.keySeq().toArray());
+    // var file = connector.getFilesByIdList(collection.get('files'), ['blocks/core/ff_module/ff_module-columnar-list/ff_module-columnar-list.md']);
+    // console.log(file);
+
+    // var fileSrc = connector.getFileSourcesById(tSite, collection, 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md', ['md', 'entry']);
+    // console.log(fileSrc);
+
+    var getFileSourcesById = connector.getFileSourcesById.bind(null, tSite, collection);
+
+    console.log(getFileSourcesById('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md', statePath).context);
+
+    // return gulp.src(files.keySeq().toArray())
     //     .pipe(plugins.plumber({
     //         errorHandler: function(err) {
     //             console.log(err);
@@ -107,12 +121,31 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(){
     //         remove: true
     //     }))
     //     .pipe(plugins.markdown())
-    //     .pipe(mdtoXSLT(mdtoXSLTOptions))
+    //     .pipe(plugins.rename({
+    //         extname: '.md'
+    //     }))
+    //     .pipe(mdtoXSLT({
+    //         xslTemplatePath: function getXSLTemplatePath(fileBuffer, context) {
+    //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
+    //             return getFileSourcesById(filePath, statePath).xslTemplatePath;
+    //         },
+    //         xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
+    //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
+    //             return getFileSourcesById(filePath, statePath).xmlTemplatePath;
+    //         },
+    //         renderer: swig,
+    //         fileContext: function(fileBuffer){
+    //             // console.log('>>>', fileBuffer.path.replace(process.cwd()+path.sep, ''));
+    //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
+    //             return getFileSourcesById(filePath, statePath).context;
+    //         },
+    //         debug: false
+    //     }))
     //     .pipe(plugins.rename({
     //         extname: '.html'
     //     }))
-    //     .pipe(gulp.dest(dest));
-})
+    //     .pipe(gulp.dest('output'));
+});
 
 /**
  * HTML/XSLT

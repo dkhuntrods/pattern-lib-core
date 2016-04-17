@@ -37,9 +37,15 @@ function getBlocksByFileIdFromCollection(collection, fileId){
 // }
 
 function getBlockSourcesFromCollection(site, collection, blockId, statePath) {
-    var filterMethod = collection.getIn(['states'].concat(statePath));
+    var transform = collection.getIn(['states'].concat(statePath).concat('apply'));
     var blockFiles = getFilesByIdList(collection.get('files'), collection.getIn(['blocks', blockId, 'fileIds']));
-    return filterMethod(site, collection, blockFiles);
+    return transform(site, collection, blockFiles);
+}
+
+function getFileSourcesById(site, collection, fileId, statePath) {
+    var transform = collection.getIn(['states'].concat(statePath).concat('apply'));
+    var file = Immutable.List([(collection.getIn(['files', fileId]))]);
+    return transform(site, collection, file);
 }
 
 function addFileIds(blocks, files) {
@@ -70,9 +76,10 @@ function getFilesByIdList(files, fileIdList) {
     });
 }
 
-function getFileListByFormat(collection, statePath){
-    var state = collection.getIn(['states'].concat(statePath));
-    console.log(state);
+function getFileListByFormat(site, collection, statePath){
+    var filter = collection.getIn(['states'].concat(statePath).concat(['filter'])).bind(null, site, collection);
+    // console.log(filter, collection.get('files').toJS());
+    return collection.get('files').filter(filter);
 }
 
 module.exports = {
@@ -87,5 +94,6 @@ module.exports = {
     getBlocksByIdList: getBlocksByIdList,
     addBlockIds: addBlockIds,
     getFilesByIdList: getFilesByIdList,
-    getFileListByFormat: getFileListByFormat
+    getFileListByFormat: getFileListByFormat,
+    getFileSourcesById: getFileSourcesById
 };

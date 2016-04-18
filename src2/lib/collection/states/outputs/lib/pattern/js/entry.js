@@ -2,7 +2,7 @@
 
 var path = require('path');
 var camelCase = require('../../../../../../transforms/map/camelCase'),
-    source = require('../../../../../../transforms/map/source');
+    output = require('../../../../../../stores/output');
 
 function filter(site, collection, file) {
     return /^_([\w-]+)-renderer\.js$/.test(file.get('name')) || file.get('ext') === '.js';
@@ -15,4 +15,4 @@ function transform(site, collection, result, file) {
     });
 }
 
-module.exports = source(filter, transform);
+module.exports = output(filter, transform);

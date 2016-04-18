@@ -1,18 +1,13 @@
 'use strict';
 
-var pathToObject = require('../../transforms/reduce/pathToObject'),
+var filesToOutputs = require('../../transforms/filesToOutputs'),
     nodePath = require('path'),
-    dir = require('node-dir'),
-    Immutable = require('immutable');
+    dir = require('node-dir');
 
 module.exports = function(onComplete) {
 
-    var sourcePath = nodePath.join(__dirname, 'src');
+    var sourcePath = nodePath.join(__dirname, 'inputs');
+    filesToOutputs = filesToOutputs.bind(null, onComplete, sourcePath);
 
-    dir.paths(sourcePath, function(err, paths) {
-        if (err) return onComplete(err);
-        var results = paths.files.reduce(pathToObject.bind(null, sourcePath), {});
-
-        return onComplete(null, Immutable.fromJS(results));
-    });
+    dir.paths(sourcePath, filesToOutputs);
 };

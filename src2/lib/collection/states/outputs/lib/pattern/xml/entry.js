@@ -2,7 +2,7 @@
 
 var path = require('path');
 
-var source = require('../../../../../../transforms/map/source');
+var output = require('../../../../../../stores/output');
 
 function filter(site, collection, file) {
     return file.get('ext') === '.xml';
@@ -16,4 +16,4 @@ function transform(site, collection, result, file) {
     });
 }
 
-module.exports = source(filter, transform);
+module.exports = output(filter, transform);

@@ -64,10 +64,12 @@ var tSite = Immutable.fromJS({
 gulp.task('test:generate', function(cb) {
     var Immutable = require('immutable');
 
+
     generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, collection) {
         if (err) return cb(err);
+        var testGetBlockOutputsFromCollection = connector.getBlockOutputsFromCollection.bind(null, tSite, collection, 'js', 'entry');
 
-        var alt = connector.getBlockSourcesFromCollection(tSite, collection, ['js', 'entry'], 'blocks/core/ff_module/ff_module-date-picker-jumpto');
+        var alt = testGetBlockOutputsFromCollection('blocks/core/ff_module/ff_module-date-picker-jumpto');
         var test = { path: '/js/ff_module-date-picker-jumpto.js', reference: 'ffModuleDatePickerJumpto' };
         console.log(test, alt);
 
@@ -81,7 +83,7 @@ gulp.task('generate:collection:pattern', function(cb) {
     generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, _collection) {
         if (err) return cb(err);
         collection = _collection;
-        // var xsl = connector.getBlockSourcesFromCollection(tSite, _collection, ['lib', 'xsl', 'entry'], 'blocks/core/ff_module/ff_module-date-picker-jumpto');
+        // var xsl = connector.getBlockOutputsFromCollection(tSite, _collection, ['lib', 'xsl', 'entry'], 'blocks/core/ff_module/ff_module-date-picker-jumpto');
         // console.log(xsl);
         // console.log(xsl.get('context'));
 
@@ -98,53 +100,52 @@ var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
 gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
     var statePath = ['md', 'entry'];
 
-    var files = connector.getFileListByFormat(tSite, collection, statePath);
+    var files = connector.getFileListByFormat(tSite, collection, 'md', 'entry');
     // console.log(files.keySeq().toArray());
     // var file = connector.getFilesByIdList(collection.get('files'), ['blocks/core/ff_module/ff_module-columnar-list/ff_module-columnar-list.md']);
     // console.log(file);
 
-    // var fileSrc = connector.getFileSourcesById(tSite, collection, statePath, 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md');
+    // var fileSrc = connector.getFileOutputsById(tSite, collection, statePath, 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md');
     // console.log(fileSrc);
 
-    var getFileSourcesById = connector.getFileSourcesById.bind(null, tSite, collection, statePath);
+    // var getFileOutputsById = connector.getFileOutputsById.bind(null, tSite, collection, statePath);
+    var getFileOutputsByAbsolutePath = connector.getFileOutputsByAbsolutePath.bind(null, tSite, collection, 'md');
+    console.log(getFileOutputsByAbsolutePath('entry','/www/sites/firefly-pattern-lib/blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md').context);
+    console.log(getFileOutputsByAbsolutePath('toXSL','context', '/www/sites/firefly-pattern-lib/blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md').context);
 
-    console.log(getFileSourcesById('blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md').context);
 
-    // return gulp.src(files.keySeq().toArray())
-    //     .pipe(plugins.plumber({
-    //         errorHandler: function(err) {
-    //             console.log(err);
-    //         }
-    //     }))
-    //     .pipe(plugins.frontMatter({
-    //         property: 'data',
-    //         remove: true
-    //     }))
-    //     .pipe(plugins.markdown())
-    //     .pipe(plugins.rename({
-    //         extname: '.md'
-    //     }))
-    //     .pipe(mdtoXSLT({
-    //         xslTemplatePath: function getXSLTemplatePath(fileBuffer, context) {
-    //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
-    //             return getFileSourcesById(filePath).xslTemplatePath;
-    //         },
-    //         xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
-    //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
-    //             return getFileSourcesById(filePath).xmlTemplatePath;
-    //         },
-    //         renderer: swig,
-    //         fileContext: function(fileBuffer){
-    //             // console.log('>>>', fileBuffer.path.replace(process.cwd()+path.sep, ''));
-    //             var filePath = fileBuffer.path.replace(process.cwd()+path.sep, '');
-    //             return getFileSourcesById(filePath).context;
-    //         },
-    //         debug: false
-    //     }))
-    //     .pipe(plugins.rename({
-    //         extname: '.html'
-    //     }))
-    //     .pipe(gulp.dest('output'));
+    return gulp.src(files.keySeq().toArray())
+        .pipe(plugins.plumber({
+            errorHandler: function(err) {
+                console.log(err);
+            }
+        }))
+        .pipe(plugins.frontMatter({
+            property: 'data',
+            remove: true
+        }))
+        .pipe(plugins.markdown())
+        .pipe(plugins.rename({
+            extname: '.md'
+        }))
+        .pipe(mdtoXSLT({
+            xslTemplatePath: function getXSLTemplatePath(fileBuffer, context) {
+                return getFileOutputsByAbsolutePath('entry', fileBuffer.path).xslTemplatePath;
+            },
+            xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
+                return getFileOutputsByAbsolutePath('entry', fileBuffer.path).xmlTemplatePath;
+            },
+            renderer: swig,
+            fileContext: function(fileBuffer){
+                console.log('>>>', getFileOutputsByAbsolutePath('toXSL', 'context', fileBuffer.path).context);
+                return getFileOutputsByAbsolutePath('toXSL', 'context', fileBuffer.path).context;
+            },
+            debug: false
+        }))
+        .pipe(plugins.rename({
+            extname: '.html'
+        }))
+        .pipe(gulp.dest('output'));
 });
 
 /**

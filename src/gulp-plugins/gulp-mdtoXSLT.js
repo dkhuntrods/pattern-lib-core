@@ -29,6 +29,7 @@ module.exports = function mdtoXSLT(options) {
         getXMLPath = options.xmlTemplatePath,
         getXSLPath = options.xslTemplatePath,
         renderer = options.renderer,
+        renderMethod = options.renderMethod || renderer.renderFile,
         debug = options.debug === true;
 
     function output(val) {
@@ -50,9 +51,9 @@ module.exports = function mdtoXSLT(options) {
         var templateXSLPath = getXSLPath(file, context);
         if(debug) gutil.log(templateXMLPath, templateXSLPath);
 
-        var documentString = renderer.renderFile(templateXMLPath, context);
+        var documentString = renderMethod(templateXMLPath, context);
         context.xmlDocumentString = documentString.replace('<?xml version="1.0" encoding="UTF-8"?>', '');
-        var stylesheetString = renderer.renderFile(templateXSLPath, context);
+        var stylesheetString = renderMethod(templateXSLPath, context);
         output(documentString);
         output(stylesheetString);
 

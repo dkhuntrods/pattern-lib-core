@@ -2,7 +2,8 @@
 
 var path = require('path'),
     matter = require('gray-matter'),
-    marked = require('marked');
+    marked = require('marked'),
+    Immutable = require('immutable');
 
 var connector = require('../../../../../../connector'),
     output = require('../../../../../../../stores/output');
@@ -11,7 +12,7 @@ function filter(site, collection, file) {
     return file.get('ext') === '.md';
 }
 
-function getLibXSLTContext(site, collection, file) {
+function getTemplateContext(site, collection, file) {
     var block = connector.getBlocksByFileIdFromCollection(collection, file.get('id')).get(0),
         frontMatter = matter.read(file.get('path')),
         content = frontMatter.content ? marked(frontMatter.content) : '',
@@ -38,10 +39,7 @@ function getLibXSLTContext(site, collection, file) {
 }
 
 function transform(site, collection, result, file) {
-
-    return result.withMutations(function(result) {
-        return result.set('context', getLibXSLTContext(site, collection, file));
-    });
+    return getTemplateContext(site, collection, file);
 }
 
 module.exports = output(filter, transform);

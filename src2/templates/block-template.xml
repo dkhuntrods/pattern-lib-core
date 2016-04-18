@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+{% from './includes/output-blocks.xml' import blocks as blocks %}
+<root>
+    <page>
+        <blocks>
+            {{ blocks(page.blockIds) }}
+        </blocks>
+    </page>
+    <site>
+        <blocks>
+
+        </blocks>
+    </site>
+</root>

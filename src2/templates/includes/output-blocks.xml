@@ -1,0 +1,7 @@
+{% macro blocks(blockIdList) %}
+    {% for blockId in blockIdList %}
+    <block id="{{blockId|blockNameFromId}}">
+        <p>{{blockId}} {{blockId|blockNameFromId}}</p>
+    </block>
+    {% endfor %}
+{% endmacro %}

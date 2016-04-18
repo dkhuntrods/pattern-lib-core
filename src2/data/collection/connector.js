@@ -96,7 +96,7 @@ function getFilesByIdList(files, fileIdList) {
     });
 }
 
-function getFileListByFormat(/* site, collection, statePathSeg, (...statePathSeg, statePathSeg) */) {
+function getFileIdListByFormat(/* site, collection, statePathSeg, (...statePathSeg, statePathSeg) */) {
     var args = Array.prototype.slice.call(arguments),
         site = args.shift(),
         collection = args.shift(),
@@ -104,12 +104,17 @@ function getFileListByFormat(/* site, collection, statePathSeg, (...statePathSeg
 
     var filter = collection.getIn(statePath).bind(null, site, collection);
     // console.log(filter, collection.get('files').toJS());
-    return collection.get('files').filter(filter);
+    return collection.get('files').filter(filter).keySeq().toArray();
+}
+
+function getBlockNameFromId(collection, blockId){
+    return collection.getIn(['blocks', blockId, 'name']);
 }
 
 module.exports = {
     getFileIdsPerBlock: getFileIdsPerBlock,
     getBlockIdsPerFile: getBlockIdsPerFile,
+    getBlockNameFromId: getBlockNameFromId,
     getFilesForBlockById: getFilesForBlockById,
     // getBlocksForFileById: getBlocksForFileById,
     // getBlockOutputs: getBlockOutputs,
@@ -119,7 +124,7 @@ module.exports = {
     getBlocksByIdList: getBlocksByIdList,
     addBlockIds: addBlockIds,
     getFilesByIdList: getFilesByIdList,
-    getFileListByFormat: getFileListByFormat,
+    getFileIdListByFormat: getFileIdListByFormat,
     // getFileOutputsById: getFileOutputsById,
     getFileOutputsByAbsolutePath: getFileOutputsByAbsolutePath
 };

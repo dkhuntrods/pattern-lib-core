@@ -43,7 +43,9 @@ function getBlockOutputsFromCollection( /* site, collection, statePathSeg, (...s
         collection = args.shift(),
         statePath = ['states'].concat(args, 'apply');
 
+    // console.log(blockId, statePath);
     var transform = collection.getIn(statePath);
+    // console.log('   ', transform);
     var blockFiles = getFilesByIdList(collection.get('files'), collection.getIn(['blocks', blockId, 'fileIds']));
     return transform(site, collection, blockFiles);
 }
@@ -96,7 +98,7 @@ function getFilesByIdList(files, fileIdList) {
     });
 }
 
-function getFileIdListByFormat(/* site, collection, statePathSeg, (...statePathSeg, statePathSeg) */) {
+function getFileIdListByFormat( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg) */ ) {
     var args = Array.prototype.slice.call(arguments),
         site = args.shift(),
         collection = args.shift(),
@@ -107,7 +109,7 @@ function getFileIdListByFormat(/* site, collection, statePathSeg, (...statePathS
     return collection.get('files').filter(filter).keySeq().toArray();
 }
 
-function getBlockNameFromId(collection, blockId){
+function getBlockNameFromId(collection, blockId) {
     return collection.getIn(['blocks', blockId, 'name']);
 }
 

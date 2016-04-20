@@ -3,7 +3,7 @@
 <root>
     <page>
         <blocks>
-            {{ blocks(page.blockIds) }}
+            {{ blocks(contextData) }}
         </blocks>
     </page>
     <site>

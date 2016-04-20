@@ -1,6 +1,7 @@
 <results>
     {% for recipient in recipients %}
-    {% include '../../../ff_module-profile-picture-and-name/ff_module-profile-picture-and-name-button/ff_module-profile-picture-and-name-button.xml' with recipient only %}
+    {% set data = recipient %}
+    {% include '../../../ff_module-profile-picture-and-name/ff_module-profile-picture-and-name-button/ff_module-profile-picture-and-name-button.xml' %}
     {% endfor %}
 </results>
 

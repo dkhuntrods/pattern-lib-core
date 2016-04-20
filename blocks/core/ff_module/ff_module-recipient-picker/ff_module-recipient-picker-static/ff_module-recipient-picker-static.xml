@@ -1,13 +1,15 @@
 <profiles state="{{state}}">
     <selected>
         {% for page in selected %}
-        {% include '../../_shared/ff_module-profile-page.xml' with page only %}
+        {% set data = page %}
+        {% include '../../_shared/ff_module-profile-page.xml' %}
         {% endfor %}
     </selected>
     <results>
         {% for page in results %}
+        {% set data = page %}
         <test>{{page.state}}</test>
-        {% include '../../_shared/ff_module-profile-page.xml' with page only %}
+        {% include '../../_shared/ff_module-profile-page.xml' %}
         {% endfor %}
     </results>
 </profiles>

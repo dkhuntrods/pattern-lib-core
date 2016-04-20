@@ -1,6 +1,9 @@
 <add-attachment id="{{addattachment.id}}">
-    {%- for button in addattachment.buttons %}
-        {%- include '../../ff_module-dropdown-button/ff_module-dropdown-button.xml' with button only -%}
+    {%- for data in addattachment.buttons %}
+        {%- include '../../ff_module-dropdown-button/ff_module-dropdown-button.xml' -%}
     {%- endfor %}
-    {%- include '../../ff_module-file-list/ff_module-file-list.xml' with { attachments: addattachment.attachments } only -%}
+
+    {% set data = {} %}
+    {% set data.attachments = addattachment.attachments %}
+    {%- include '../../ff_module-file-list/ff_module-file-list.xml' -%}
 </add-attachment>

@@ -17,9 +17,12 @@ function getTemplateContext(site, collection, file) {
         frontMatter = matter.read(file.get('path')),
         content = frontMatter.content ? marked(frontMatter.content) : '',
 
-        data = frontMatter.data && frontMatter.data.data || {},
+        data = (frontMatter.data && frontMatter.data.data) ? [].concat(frontMatter.data.data) : [],
         page = frontMatter.data && frontMatter.data.page || {},
-        requires = frontMatter.data && frontMatter.data.requires || [];
+        requires = frontMatter.data && frontMatter.data.requires || [],
+
+        dataWithBlockId = {};
+        dataWithBlockId[block.get('id')] = data;
 
     return {
         page: {
@@ -28,7 +31,7 @@ function getTemplateContext(site, collection, file) {
             blockIds: file.get('blockIds').toArray(),
             content: content
         },
-        data: data,
+        contextData: [dataWithBlockId],
         site: {
             title: site.get('title'),
             themes: site.get('themes').toJS(),

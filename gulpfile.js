@@ -91,7 +91,7 @@ gulp.task('generate:collection:pattern', function(cb) {
 
         // console.log(collection.get('blocks').keySeq().toJS());
 
-        cb(err);
+        cb();
     });
 });
 
@@ -100,7 +100,7 @@ var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
 gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
 
     var swig2 = require('./src2/lib/swigWithData')(collection, connector);
-    var nunjucks = require('./src2/lib/nunjucksWithData')(collection, connector);
+    var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
 
     var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
     // console.log(files.keySeq().toArray());
@@ -127,12 +127,13 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
                 return getFileOutputsByAbsolutePath('template','base','xsl', fileBuffer.path);
             },
             xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
+                console.log(fileBuffer.path);
                 return getFileOutputsByAbsolutePath('template','base','xml', fileBuffer.path);
             },
             // renderer: swig2,
             renderMethod: nunjucks.render.bind(nunjucks),
             fileContext: function(fileBuffer){
-                // console.log('>>>', getFileOutputsByAbsolutePath('toXSL', 'context', fileBuffer.path).context);
+                // console.log('>>>', getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path));
                 return getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path);
             },
             debug: false

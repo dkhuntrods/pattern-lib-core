@@ -21,8 +21,8 @@
         {{item.value}}
         {% endif %}
         {% if item.progress %}
-            {% for item in item.progress %}
-                {% include '../ff_module-progress/ff_module-progress.xml' with item %}
+            {% for data in item.progress %}
+                {% include '../ff_module-progress/ff_module-progress.xml' %}
              {% endfor %}
         {% endif %}
         {% if item.attachments %}

@@ -1,6 +1,7 @@
 'use strict';
 
 var nunjucks = require('nunjucks'),
+    _ = require('lodash'),
     path = require('path');
 
 module.exports = function(site, collection, connector) {
@@ -13,10 +14,20 @@ module.exports = function(site, collection, connector) {
         return connector.getBlockNameFromId(collection, blockId);
     });
 
-    env.addFilter('xmlDataPathFromBlockId', function(blockId) {
-        // console.log('>',getBlockOutputsFromCollection('xml','data','path', blockId));
-        // return 'n';
-        return getBlockOutputsFromCollection('xml', 'data', 'path', blockId);
+    env.addFilter('blockIdFromName', function(blockName) {
+        return connector.getBlockIdFromName(collection, blockName);
+    });
+
+    env.addFilter('xslDataPathFromBlockId', function(blockId) {
+        var result = getBlockOutputsFromCollection('xsl', 'data', blockId);
+        if (!_.isEmpty(result)) return result;
+        else return '';
+    });
+
+    env.addFilter('xslEntryPathFromBlockId', function(blockId){
+        var result = getBlockOutputsFromCollection('xsl', 'entry', blockId);
+        if (!_.isEmpty(result)) return result;
+        else return '';
     });
 
     return env;

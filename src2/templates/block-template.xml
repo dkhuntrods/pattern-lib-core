@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-{% from './includes/output-blocks.xml' import blocks as blocks %}
+{% from './includes/output-blocks.xml' import outputBlockData %}
 <root>
     <page>
         <blocks>
-            {{ blocks(contextData) }}
+            {{ outputBlockData(contextData) }}
         </blocks>
     </page>
     <site>

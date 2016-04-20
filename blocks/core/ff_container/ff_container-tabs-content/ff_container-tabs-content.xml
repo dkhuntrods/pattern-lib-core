@@ -1,5 +1,5 @@
-<tabs modifier="{{modifier}}">
-    {% for tab in tabs %}
+<tabs modifier="{{data.modifier}}">
+    {% for tab in data.tabs %}
         <tab state="{{tab.state | default('')}}" id="{{tab.id}}">
             <label>{{tab.label | default('Tab Label')}}</label>
             <content>{{tab.content | default('<p>Tab Content</p>') | safe}}</content>

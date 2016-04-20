@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var output = require('../../../../../../stores/output');
 
 function filter(site, collection, file) {
@@ -7,10 +8,7 @@ function filter(site, collection, file) {
 }
 
 function transform(site, collection, result, file) {
-
-    return result.withMutations(function(result) {
-        return result.set('path', file.get('path'));
-    });
+    return path.relative(process.cwd(), file.get('absolutePath'));
 }
 
 module.exports = output(filter, transform);

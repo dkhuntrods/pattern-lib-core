@@ -3,7 +3,6 @@
         {%- include '../../ff_module-dropdown-button/ff_module-dropdown-button.xml' -%}
     {%- endfor %}
 
-    {% set data = {} %}
-    {% set data.attachments = addattachment.attachments %}
+    {% set data = { attachments : addattachment.attachments } %}
     {%- include '../../ff_module-file-list/ff_module-file-list.xml' -%}
 </add-attachment>

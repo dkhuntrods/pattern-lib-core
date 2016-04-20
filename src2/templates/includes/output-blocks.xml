@@ -1,13 +1,13 @@
-{% macro blocks(contextData) %}
+{% macro outputBlockData(contextData) %}
     {% for loopBlock in contextData %}
     {% for blockId, blockData in loopBlock %}
 
     {% set blockName = blockId|blockNameFromId %}
-    <block id="{{blockName}}">
-        <p>{{blockId}}: {{blockId|xmlDataPathFromBlockId}}: {{test(blockData)}}</p>
-        {% include ''+blockId|xmlDataPathFromBlockId ignore missing %}
-    </block>
+    {% for data in blockData %}
 
+        {% include './output-block.xml' %}
+
+    {% endfor %}
     {% endfor %}
     {% endfor %}
 

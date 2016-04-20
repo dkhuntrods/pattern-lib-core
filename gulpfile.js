@@ -136,7 +136,7 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
                 // console.log('>>>', getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path));
                 return getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path);
             },
-            debug: false
+            debug: true
         }))
         .pipe(plugins.rename({
             extname: '.html'

@@ -1,8 +1,9 @@
 <form-pairs modifier="{{modifier}}">
 {% for item in inputs %}
 <form-pair id="{{item.id}}" modifier="{{item.modifier}}">
-    {% include '../ff_module-form-input/ff_module-form-input.xml' with item %}
-    {% include '../ff_module-form-label/ff_module-form-label.xml' with item %}
+    {% set data = item %}
+    {% include '../ff_module-form-input/ff_module-form-input.xml' %}
+    {% include '../ff_module-form-label/ff_module-form-label.xml' %}
 </form-pair>
 
 {% endfor %}

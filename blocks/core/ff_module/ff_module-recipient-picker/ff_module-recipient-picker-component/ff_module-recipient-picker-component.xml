@@ -1,1 +1,1 @@
-<picker dataattr="{{dataattr}}"/>
+<picker dataattr="{{data.dataattr}}"/>

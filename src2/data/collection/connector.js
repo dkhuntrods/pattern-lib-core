@@ -113,10 +113,18 @@ function getBlockNameFromId(collection, blockId) {
     return collection.getIn(['blocks', blockId, 'name']);
 }
 
+
+function getBlockIdFromName(collection, blockName) {
+    return collection.get('blocks').filter(function(block){
+        return block.get('name') === blockName;
+    }).first().get('id');
+}
+
 module.exports = {
     getFileIdsPerBlock: getFileIdsPerBlock,
     getBlockIdsPerFile: getBlockIdsPerFile,
     getBlockNameFromId: getBlockNameFromId,
+    getBlockIdFromName: getBlockIdFromName,
     getFilesForBlockById: getFilesForBlockById,
     // getBlocksForFileById: getBlocksForFileById,
     // getBlockOutputs: getBlockOutputs,

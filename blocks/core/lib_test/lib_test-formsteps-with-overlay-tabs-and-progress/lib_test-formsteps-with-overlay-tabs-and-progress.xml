@@ -1,7 +1,9 @@
-{% include '../../ff_container/ff_container-tabs-content/ff_container-tabs-content.xml' with grouptab only %}
+{% from 'src2/templates/includes/utils.njk' import includeWithData %}
 
-{% include '../../ff_container/ff_container-formstep-content/ff_container-formstep-content.xml' with formstepheading only %}
+{{ includeWithData('blocks/core/ff_container/ff_container-tabs-content/ff_container-tabs-content.xml', data.grouptab) }}
 
-{% include '../../ff_module/ff_module-recipient-picker/ff_module-recipient-picker-component/ff_module-recipient-picker-component.xml' with picker only %}
+{{ includeWithData('blocks/core/ff_container/ff_container-formstep-content/ff_container-formstep-content.xml', data.formstepheading) }}
 
-{% include '../../ff_module/ff_module-recipient-picker/ff_module-recipient-picker-new-group-button/ff_module-recipient-picker-new-group-button.xml' with newgroupbtn only %}
+{{ includeWithData('blocks/core/ff_module/ff_module-recipient-picker/ff_module-recipient-picker-component/ff_module-recipient-picker-component.xml', data.picker) }}
+
+{{ includeWithData('blocks/core/ff_module/ff_module-recipient-picker/ff_module-recipient-picker-new-group-button/ff_module-recipient-picker-new-group-button.xml', data.newgroupbtn) }}

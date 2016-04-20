@@ -1,0 +1,3 @@
+<block id="{{blockName}}">
+    {% include blockId|xslDataPathFromBlockId ignore missing %}
+</block>

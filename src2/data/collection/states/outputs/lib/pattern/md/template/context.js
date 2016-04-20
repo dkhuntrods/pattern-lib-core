@@ -3,7 +3,7 @@
 var path = require('path'),
     matter = require('gray-matter'),
     marked = require('marked'),
-    Immutable = require('immutable');
+    _ = require('lodash');
 
 var connector = require('../../../../../../connector'),
     output = require('../../../../../../../stores/output');
@@ -19,10 +19,12 @@ function getTemplateContext(site, collection, file) {
 
         data = (frontMatter.data && frontMatter.data.data) ? [].concat(frontMatter.data.data) : [],
         page = frontMatter.data && frontMatter.data.page || {},
-        requires = frontMatter.data && frontMatter.data.requires || [],
+        requires = (frontMatter.data && frontMatter.data.requires) ? [].concat(frontMatter.data.requires) : [],
 
         dataWithBlockId = {};
         dataWithBlockId[block.get('id')] = data;
+
+        requires = requires.map(connector.getBlockIdFromName.bind(null, collection));
 
     return {
         page: {

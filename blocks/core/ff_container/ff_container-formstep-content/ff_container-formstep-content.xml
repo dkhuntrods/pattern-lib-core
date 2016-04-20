@@ -1,6 +1,6 @@
-<formsteps {%- if modifier %} modifier="{{modifier}}" {%- endif -%}
+<formsteps {%- if data.modifier %} modifier="{{data.modifier}}" {%- endif -%}
     >
-    {% for step in steps %}
+    {% for step in data.steps %}
         <step state="{{step.state | default('')}}" id="{{step.id}}">
             <label tab-attr-name="data-ff-formsteps-trigger">{{step.label | default('Tab Label')}}</label>
             <content tab-attr-name="data-ff-formsteps-target">{{step.content | default('<p>Tab Content</p>') | safe}}</content>

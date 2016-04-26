@@ -80,7 +80,7 @@ gulp.task('test:generate', function(cb) {
 var collection;
 gulp.task('generate:collection:pattern', function(cb) {
 
-    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, _collection) {
+    generator(path.join('blocks2', 'core'), ['lib', 'pattern'], function(err, _collection) {
         if (err) return cb(err);
         collection = _collection;
         // var xsl = connector.getBlockOutputsFromCollection(tSite, _collection, ['lib', 'xsl', 'entry'], 'blocks/core/ff_module/ff_module-date-picker-jumpto');
@@ -99,7 +99,6 @@ var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
 
 gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
 
-    var swig2 = require('./src2/lib/swigWithData')(collection, connector);
     var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
 
     var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');

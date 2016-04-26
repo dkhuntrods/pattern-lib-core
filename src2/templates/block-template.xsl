@@ -10,27 +10,17 @@
     <xsl:output method="html" omit-xml-declaration="yes" indent="yes"
     encoding="utf-8"/>
 
-
     {{outputXSLRequires(requires)}}
     {{outputBlockXSL(contextData)}}
 
     <xsl:template match="/">
-        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
-        <html class="no-js" lang="">
+        <xsl:text disable-output-escaping='yes'>&lt;!----&gt;</xsl:text>
 
+        <xsl:apply-templates select="blocks"/>
 
-
-            <body>
-                <div>
-                    <xsl:apply-templates select="root/page/blocks"/>
-                </div>
-                <div>{{page.content|safe}}</div>
-            </body>
-        </html>
     </xsl:template>
 
-    <xsl:template match="root/page/blocks">
-
+    <xsl:template match="blocks">
 
         {% for loopBlock in contextData %}
         {% for blockId, blockData in loopBlock %}
@@ -39,6 +29,8 @@
         {%- set blockXSLPath = blockId|xslEntryPathFromBlockId -%}
         {%- if blockXSLPath -%}
         <xsl:call-template name="call-{{blockName}}"/>
+        {%- else -%}
+        <div/>
         {%- endif -%}
         {%- endfor -%}
         {%- endfor -%}

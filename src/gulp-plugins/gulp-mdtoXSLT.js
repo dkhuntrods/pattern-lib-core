@@ -70,6 +70,9 @@ module.exports = function mdtoXSLT(options) {
 
             stylesheet.apply(documentString, {}, function(err, result) {
 
+                gutil.log(file.path);
+                output(result);
+
                 if (err) {
                     gutil.log(file.path);
                     alwaysOutput('\n\n' + documentString);
@@ -95,7 +98,6 @@ module.exports = function mdtoXSLT(options) {
                 }
 
                 if (file.isBuffer()) {
-                    // output(result);
                     file.contents = new Buffer(result, 'utf-8');
                     t.push(file);
                     return callback();

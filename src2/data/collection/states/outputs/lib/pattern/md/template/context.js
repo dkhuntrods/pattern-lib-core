@@ -48,3 +48,4 @@ function transform(site, collection, result, file) {
 }
 
 module.exports = output(filter, transform);
+module.exports.getTemplateContext = getTemplateContext;

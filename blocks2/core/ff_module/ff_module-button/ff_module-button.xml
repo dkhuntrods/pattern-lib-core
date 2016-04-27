@@ -1,12 +1,12 @@
 <button
-    {% if id %}         id="{{id}}"                 {% endif %}
-    {% if modifier %}   modifier="{{modifier}}"     {% endif %}
-    {% if icon %}       icon="{{icon}}"             {% endif %}
-    {% if icon_align %} icon_align="{{icon_align}}"  {% endif %}
-    {% if disabled %}   disabled="{{disabled}}"     {% endif %}
-    {% if hide_text %}  hide_text="{{hide_text}}"   {% endif %}
+    {% if data.id %}         id="{{data.id}}"                 {% endif %}
+    {% if data.modifier %}   modifier="{{data.modifier}}"     {% endif %}
+    {% if data.icon %}       icon="{{data.icon}}"             {% endif %}
+    {% if data.icon_align %} icon_align="{{data.icon_align}}"  {% endif %}
+    {% if data.disabled %}   disabled="{{data.disabled}}"     {% endif %}
+    {% if data.hide_text %}  hide_text="{{data.hide_text}}"   {% endif %}
     >
-        <text>{{text | default('Click me?')}}</text>
+        <text>{{data.text | default('Click me?')}}</text>
         {% for d in data %}
         <data attr="{{d.attr}}">{{d.value}}</data>
         {% endfor %}

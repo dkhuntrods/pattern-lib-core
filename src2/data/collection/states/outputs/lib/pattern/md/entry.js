@@ -4,11 +4,11 @@ var path = require('path');
 
 var output = require('../../../../../../stores/output');
 
-function filter(site, collection, file) {
+function filter(site, collection, file, onComplete) {
     return file.get('ext') === '.md';
 }
 
-function transform(site, collection, result, file) {
+function transform(site, collection, result, file, onComplete) {
 
     return result.withMutations(function(result) {
         return result.set('path', path.join(file.get('dir'), file.get('name').replace('.md', '.html')));

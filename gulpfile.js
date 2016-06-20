@@ -99,48 +99,48 @@ var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
 
 gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
 
-    var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
+    // var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
 
-    var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
-    // console.log(files.keySeq().toArray());
-    // var file = connector.getFilesByIdList(collection.get('files'), ['blocks/core/ff_module/ff_module-columnar-list/ff_module-columnar-list.md']);
+    // var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
+    // // console.log(files.keySeq().toArray());
+    // var file = connector.getFileOutputsByAbsolutePath(tSite, collection, 'md', 'entry', 'blocks/core/ff_module/ff_module-columnar-list/ff_module-columnar-list.md');
     // console.log(file);
 
-    // var fileSrc = connector.getFileOutputsById(tSite, collection, statePath, 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md');
+    // var fileSrc = connector.getFileOutputsById(tSite, collection, 'template','base','xsl', 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md');
     // console.log(fileSrc);
 
     // var getFileOutputsById = connector.getFileOutputsById.bind(null, tSite, collection, statePath);
     var getFileOutputsByAbsolutePath = connector.getFileOutputsByAbsolutePath.bind(null, tSite, collection, 'md');
-    // console.log(getFileOutputsByAbsolutePath('entry','/www/sites/firefly-pattern-lib/blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md').context);
-    // console.log(getFileOutputsByAbsolutePath('toXSL','context', '/www/sites/firefly-pattern-lib/blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md'));
+    console.log(getFileOutputsByAbsolutePath('entry','/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md'));
+    console.log(getFileOutputsByAbsolutePath('template','context', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md'));
     // console.log(swig2, swig2.renderFile);
 
-    return gulp.src(fileIdList)
-        .pipe(plugins.plumber({
-            errorHandler: function(err) {
-                console.log(err);
-            }
-        }))
-        .pipe(mdtoXSLT({
-            xslTemplatePath: function getXSLTemplatePath(fileBuffer, context) {
-                return getFileOutputsByAbsolutePath('template','base','xsl', fileBuffer.path);
-            },
-            xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
-                console.log(fileBuffer.path);
-                return getFileOutputsByAbsolutePath('template','base','xml', fileBuffer.path);
-            },
-            // renderer: swig2,
-            renderMethod: nunjucks.render.bind(nunjucks),
-            fileContext: function(fileBuffer){
-                // console.log('>>>', getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path));
-                return getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path);
-            },
-            debug: true
-        }))
-        .pipe(plugins.rename({
-            extname: '.html'
-        }))
-        .pipe(gulp.dest('wwwroot2/blocks/'));
+    // return gulp.src(fileIdList)
+    //     .pipe(plugins.plumber({
+    //         errorHandler: function(err) {
+    //             console.log(err);
+    //         }
+    //     }))
+    //     .pipe(mdtoXSLT({
+    //         xslTemplatePath: function getXSLTemplatePath(fileBuffer, context) {
+    //             return getFileOutputsByAbsolutePath('template','base','xsl', fileBuffer.path);
+    //         },
+    //         xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
+    //             console.log(fileBuffer.path);
+    //             return getFileOutputsByAbsolutePath('template','base','xml', fileBuffer.path);
+    //         },
+    //         // renderer: swig2,
+    //         renderMethod: nunjucks.render.bind(nunjucks),
+    //         fileContext: function(fileBuffer){
+    //             // console.log('>>>', getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path));
+    //             return getFileOutputsByAbsolutePath('template', 'context', fileBuffer.path);
+    //         },
+    //         debug: true
+    //     }))
+    //     .pipe(plugins.rename({
+    //         extname: '.html'
+    //     }))
+    //     .pipe(gulp.dest('wwwroot2/blocks/'));
 });
 
 /**

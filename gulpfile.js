@@ -62,15 +62,13 @@ var tSite = Immutable.fromJS({
 });
 
 gulp.task('test:generate', function(cb) {
-    var Immutable = require('immutable');
 
-
-    generator(path.join('blocks', 'core'), ['lib', 'pattern'], function(err, collection) {
+    generator(path.join('blocks2', 'core'), ['lib', 'pattern'], function(err, collection) {
         if (err) return cb(err);
         var testGetBlockOutputsFromCollection = connector.getBlockOutputsFromCollection.bind(null, tSite, collection, 'js', 'entry');
 
-        var alt = testGetBlockOutputsFromCollection('blocks/core/ff_module/ff_module-date-picker-jumpto');
-        var test = { path: '/js/ff_module-date-picker-jumpto.js', reference: 'ffModuleDatePickerJumpto' };
+        var alt = testGetBlockOutputsFromCollection('blocks2/core/ff_module/ff_module-task-event');
+        var test = { path: '/js/ff_module-task-event.js', reference: 'ffModuleTaskEvent' };
         console.log(test, alt);
 
         cb(err);
@@ -83,37 +81,34 @@ gulp.task('generate:collection:pattern', function(cb) {
     generator(path.join('blocks2', 'core'), ['lib', 'pattern'], function(err, _collection) {
         if (err) return cb(err);
         collection = _collection;
-        // var xsl = connector.getBlockOutputsFromCollection(tSite, _collection, ['lib', 'xsl', 'entry'], 'blocks/core/ff_module/ff_module-date-picker-jumpto');
+
+        // var xsl = connector.getBlockOutputsFromCollection(tSite, _collection, 'md', 'template', 'context', 'blocks2/core/ff_module/ff_module-message');
         // console.log(xsl);
-        // console.log(xsl.get('context'));
-
-        // console.log(collection.get('states').toJS());
-
-        // console.log(collection.get('blocks').keySeq().toJS());
 
         cb();
     });
 });
 
-var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
+// var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
 
-gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
+gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(cb) {
 
     // var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
 
     // var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
-    // // console.log(files.keySeq().toArray());
-    // var file = connector.getFileOutputsByAbsolutePath(tSite, collection, 'md', 'entry', 'blocks/core/ff_module/ff_module-columnar-list/ff_module-columnar-list.md');
-    // console.log(file);
+    // console.log(fileIdList);
+    // connector.getFileOutputsByAbsolutePath(tSite, collection, 'md', 'entry', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-task-event/ff_module-task-event.md', function(err, val){ console.log(err, val); });
 
-    // var fileSrc = connector.getFileOutputsById(tSite, collection, 'template','base','xsl', 'blocks/core/ff_module/ff_module-form-box-member/ff_module-form-box-member.md');
-    // console.log(fileSrc);
+    // var count = 0;
+    function onComp(err, val) {
+        console.log('On Complete 1:', val);
+        cb();
+    }
 
-    // var getFileOutputsById = connector.getFileOutputsById.bind(null, tSite, collection, statePath);
-    var getFileOutputsByAbsolutePath = connector.getFileOutputsByAbsolutePath.bind(null, tSite, collection, 'md');
-    console.log(getFileOutputsByAbsolutePath('entry','/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md'));
-    console.log(getFileOutputsByAbsolutePath('template','context', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.md'));
-    // console.log(swig2, swig2.renderFile);
+    // var getFileOutputsByAbsolutePath = connector.getFileOutputsByAbsolutePath.bind(null, tSite, collection, 'md');
+
+    connector.getFileOutputsByAbsolutePath(tSite, collection, 'xsl', 'block', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.xsl', onComp);
+
 
     // return gulp.src(fileIdList)
     //     .pipe(plugins.plumber({
@@ -140,7 +135,7 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function() {
     //     .pipe(plugins.rename({
     //         extname: '.html'
     //     }))
-    //     .pipe(gulp.dest('wwwroot2/blocks/'));
+    //     .pipe(gulp.dest('wwwroot2/blocks2/'));
 });
 
 /**

@@ -6,6 +6,14 @@ var fileBlockJoinMap = require('../transforms/map/patternFileBlockTuple'),
     fileBlockReduce = require('../transforms/reduce/assignFileIdsToBlockIds'),
     blockFileReduce = require('../transforms/reduce/assignBlockIdsToFileIds');
 
+function getCollectionPath(collection, path, name) {
+    name = name || 'transform';
+    var transform = collection.getIn(path);
+    if (!transform) throw new Error('\nNo ' + name + ' found for path \'' + path.join(', ') +
+        '\'\nIf state, check that a file lives at this location within \'src/data/collection/states/outputs/lib/*\'');
+    return transform;
+}
+
 function getFileIdsPerBlock(files, blocks) {
     var joinMethod = fileBlockJoinMap.bind(null, blocks);
     return Immutable.fromJS(files.toArray()
@@ -29,45 +37,62 @@ function getFilesForBlockById(blockId, files, blocks) {
 // }
 
 function getBlocksByFileIdFromCollection(collection, fileId) {
-    return getBlocksByIdList(collection.get('blocks'), collection.getIn(['files', fileId, 'blockIds']));
+    return getBlocksByIdList(collection.get('blocks'), getCollectionPath(collection, ['files', fileId, 'blockIds']));
 }
 
 // function getBlockOutputs(state, blockFiles, formatId, sourceId) {
 //     return state.getIn([formatId, sourceId])(blockFiles);
 // }
 
-function getBlockOutputsFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), blockId */ ) {
+function getBlockOutputsFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), blockId, onComplete */ ) {
     var args = Array.prototype.slice.call(arguments),
-        blockId = args.pop(),
+        onComplete, blockId,
+        statePath,
         site = args.shift(),
         collection = args.shift(),
-        statePath = ['states'].concat(args, 'apply');
+        finalArg = args.pop();
 
-    // console.log(blockId, statePath);
-    var transform = collection.getIn(statePath);
-    // console.log('   ', transform);
-    var blockFiles = getFilesByIdList(collection.get('files'), collection.getIn(['blocks', blockId, 'fileIds']));
-    return transform(site, collection, blockFiles);
+    if (typeof finalArg === 'function') {
+        onComplete = finalArg;
+        blockId = args.pop();
+    } else {
+        blockId = finalArg;
+    }
+
+    statePath = ['states'].concat(args, 'apply');
+
+    var transform = getCollectionPath(collection, statePath);
+
+    var filesIds = getCollectionPath(collection, ['blocks', blockId, 'fileIds'], 'fileIds');
+
+    var blockFiles = getFilesByIdList(collection.get('files'), filesIds);
+    return transform(site, collection, blockFiles, onComplete);
 }
 
-// function getFileOutputsById(site, collection, statePath, fileId) {
-//     var transform = collection.getIn(['states'].concat(statePath).concat('apply'));
-//     var file = Immutable.List([(collection.getIn(['files', fileId]))]);
-//     return transform(site, collection, file);
-// }
-
-function getFileOutputsByAbsolutePath( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), filePath */ ) {
+function getFileOutputsByAbsolutePath( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), filePath, onComplete */ ) {
     var args = Array.prototype.slice.call(arguments),
-        filePath = args.pop(),
+        filePath, onComplete,
+        statePath,
         site = args.shift(),
         collection = args.shift(),
-        statePath = ['states'].concat(args, 'apply');
+        finalArg = args.pop();
 
-    var transform = collection.getIn(statePath);
+    if (typeof finalArg === 'function') {
+        onComplete = finalArg;
+        filePath = args.pop();
+    } else {
+        filePath = finalArg;
+    }
+
+    statePath = ['states'].concat(args, 'apply');
+
+    var transform = getCollectionPath(collection, statePath);
+
     var file = collection.get('files').filter(function(file) {
         return file.get('absolutePath') === filePath;
     });
-    return transform(site, collection, file);
+
+    return transform(site, collection, file, onComplete);
 }
 
 function addFileIds(blocks, files) {
@@ -102,20 +127,21 @@ function getFileIdListByFormat( /* site, collection, statePathSeg, (...statePath
     var args = Array.prototype.slice.call(arguments),
         site = args.shift(),
         collection = args.shift(),
-        statePath = ['states'].concat(args, 'filter');
+        statePath = ['states'].concat(args, 'filter'),
+        filterFunc = getCollectionPath(collection, statePath);
 
-    var filter = collection.getIn(statePath).bind(null, site, collection);
+    var filter = filterFunc.bind(null, site, collection);
     // console.log(filter, collection.get('files').toJS());
     return collection.get('files').filter(filter).keySeq().toArray();
 }
 
 function getBlockNameFromId(collection, blockId) {
-    return collection.getIn(['blocks', blockId, 'name']);
+    return getCollectionPath(collection, ['blocks', blockId, 'name']);
 }
 
 
 function getBlockIdFromName(collection, blockName) {
-    return collection.get('blocks').filter(function(block){
+    return collection.get('blocks').filter(function(block) {
         return block.get('name') === blockName;
     }).first().get('id');
 }
@@ -135,6 +161,5 @@ module.exports = {
     addBlockIds: addBlockIds,
     getFilesByIdList: getFilesByIdList,
     getFileIdListByFormat: getFileIdListByFormat,
-    // getFileOutputsById: getFileOutputsById,
     getFileOutputsByAbsolutePath: getFileOutputsByAbsolutePath
 };

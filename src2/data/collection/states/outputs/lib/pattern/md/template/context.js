@@ -8,7 +8,7 @@ var path = require('path'),
 var connector = require('../../../../../../connector'),
     output = require('../../../../../../../stores/output');
 
-function filter(site, collection, file) {
+function filterTemplateContext(site, collection, file) {
     return file.get('ext') === '.md';
 }
 
@@ -43,9 +43,9 @@ function getTemplateContext(site, collection, file) {
     };
 }
 
-function transform(site, collection, result, file) {
+function transformTemplateContext(site, collection, result, file) {
     return getTemplateContext(site, collection, file);
 }
 
-module.exports = output(filter, transform);
+module.exports = output(filterTemplateContext, transformTemplateContext);
 module.exports.getTemplateContext = getTemplateContext;

@@ -2,12 +2,12 @@
 
 var output = require('../../../../../../../stores/output');
 
-function filter(site, collection, file) {
+function filterDataPath(site, collection, file) {
     return file.get('ext') === '.xml';
 }
 
-function transform(site, collection, result, file) {
+function transformDataPath(site, collection, result, file) {
     return file.get('absolutePath');
 }
 
-module.exports = output(filter, transform);
+module.exports = output(filterDataPath, transformDataPath);

@@ -7,14 +7,14 @@ var path = require('path'),
 var connector = require('../../../../../../../connector'),
     output = require('../../../../../../../../stores/output');
 
-function filter(site, collection, file) {
+function filterBaseXsl(site, collection, file) {
     return file.get('ext') === '.md';
 }
 
-function transform(site, collection, result, file) {
+function transformBaseXsl(site, collection, result, file) {
 
     return path.join('src2', 'templates', 'block-template.xsl');
 
 }
 
-module.exports = output(filter, transform);
+module.exports = output(filterBaseXsl, transformBaseXsl);

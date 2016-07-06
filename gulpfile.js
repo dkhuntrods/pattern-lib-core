@@ -63,7 +63,7 @@ var tSite = Immutable.fromJS({
 
 gulp.task('test:generate', function(cb) {
 
-    generator(path.join('blocks2', 'core'), ['lib', 'pattern'], function(err, collection) {
+    generator(path.join('blocks2', 'core'), ['pattern'], function(err, collection) {
         if (err) return cb(err);
         var testGetBlockOutputsFromCollection = connector.getBlockOutputsFromCollection.bind(null, tSite, collection, 'js', 'entry');
 
@@ -78,7 +78,7 @@ gulp.task('test:generate', function(cb) {
 var collection;
 gulp.task('generate:collection:pattern', function(cb) {
 
-    generator(path.join('blocks2', 'core'), ['lib', 'pattern'], function(err, _collection) {
+    generator(path.join('blocks2', 'core'), ['pattern'], function(err, _collection) {
         if (err) return cb(err);
         collection = _collection;
 
@@ -95,8 +95,8 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(cb)
 
     // var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
 
-    // var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
-    // console.log(fileIdList);
+    var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
+    console.log(fileIdList);
     // connector.getFileOutputsByAbsolutePath(tSite, collection, 'md', 'entry', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-task-event/ff_module-task-event.md', function(err, val){ console.log(err, val); });
 
     // var count = 0;

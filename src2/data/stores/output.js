@@ -11,37 +11,32 @@ function getResult(result) {
 function applySync(sourceFilter, sourceTransform, site, collection, blockFiles) {
     var result = blockFiles
         .filter(sourceFilter.bind(null, site, collection))
-        .reduce(sourceTransform.bind(null, site, collection), Immutable.Map());
+        .reduce(sourceTransform.bind(null, site, collection), Immutable.List());
     return getResult(result);
 }
 
 function applyAsyncBoth(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
     return async.filter(blockFiles.toArray(), sourceFilter.bind(null, site, collection), function(results) {
-        return async.reduce(results, Immutable.Map(), sourceTransform.bind(null, site, collection), function(err, result) {
+        return async.reduce(results, Immutable.List(), sourceTransform.bind(null, site, collection), function(err, result) {
             return onComplete(err, getResult(result));
         });
     });
 }
 
 function applyAsyncTransform(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
-    return async.reduce(blockFiles.filter(sourceFilter.bind(null, site, collection)).toArray(), Immutable.Map(), sourceTransform.bind(null, site, collection), function(err, result) {
+    return async.reduce(blockFiles.filter(sourceFilter.bind(null, site, collection)).toArray(), Immutable.List(), sourceTransform.bind(null, site, collection), function(err, result) {
         return onComplete(err, getResult(result));
     });
 }
 
 function applyAsyncFilter(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
     return async.filter(blockFiles.toArray(), sourceFilter.bind(null, site, collection), function(results) {
-        var result = results.reduce(sourceTransform.bind(null, site, collection), Immutable.Map());
+        var result = results.reduce(sourceTransform.bind(null, site, collection), Immutable.List());
         return onComplete(null, getResult(result));
     });
 }
 
 var transformMethods = [applySync, applyAsyncBoth, applyAsyncTransform, applyAsyncFilter];
-
-function getTransformMethod(sourceFilter, sourceTransform, onComplete) {
-    var type = getTransformType(sourceFilter, sourceTransform, onComplete);
-    return transformMethods[type];
-}
 
 function getTransformType(sourceFilter, sourceTransform, onComplete) {
 
@@ -69,6 +64,10 @@ function getTransformType(sourceFilter, sourceTransform, onComplete) {
     return type;
 }
 
+function getTransformMethod(sourceFilter, sourceTransform, onComplete) {
+    var type = getTransformType(sourceFilter, sourceTransform, onComplete);
+    return transformMethods[type];
+}
 
 function applyTransforms(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
 

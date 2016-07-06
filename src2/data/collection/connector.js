@@ -44,57 +44,6 @@ function getBlocksByFileIdFromCollection(collection, fileId) {
 //     return state.getIn([formatId, sourceId])(blockFiles);
 // }
 
-function getBlockOutputsFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), blockId, onComplete */ ) {
-    var args = Array.prototype.slice.call(arguments),
-        onComplete, blockId,
-        statePath,
-        site = args.shift(),
-        collection = args.shift(),
-        finalArg = args.pop();
-
-    if (typeof finalArg === 'function') {
-        onComplete = finalArg;
-        blockId = args.pop();
-    } else {
-        blockId = finalArg;
-    }
-
-    statePath = ['states'].concat(args, 'apply');
-
-    var transform = getCollectionPath(collection, statePath);
-
-    var filesIds = getCollectionPath(collection, ['blocks', blockId, 'fileIds'], 'fileIds');
-
-    var blockFiles = getFilesByIdList(collection.get('files'), filesIds);
-    return transform(site, collection, blockFiles, onComplete);
-}
-
-function getFileOutputsByAbsolutePath( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), filePath, onComplete */ ) {
-    var args = Array.prototype.slice.call(arguments),
-        filePath, onComplete,
-        statePath,
-        site = args.shift(),
-        collection = args.shift(),
-        finalArg = args.pop();
-
-    if (typeof finalArg === 'function') {
-        onComplete = finalArg;
-        filePath = args.pop();
-    } else {
-        filePath = finalArg;
-    }
-
-    statePath = ['states'].concat(args, 'apply');
-
-    var transform = getCollectionPath(collection, statePath);
-
-    var file = collection.get('files').filter(function(file) {
-        return file.get('absolutePath') === filePath;
-    });
-
-    return transform(site, collection, file, onComplete);
-}
-
 function addFileIds(blocks, files) {
     var fileMap = getFileIdsPerBlock(files, blocks);
     return blocks.map(function(block, blockName) {
@@ -146,6 +95,83 @@ function getBlockIdFromName(collection, blockName) {
     }).first().get('id');
 }
 
+
+function getBlockOutputsFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), blockId, onComplete */ ) {
+    var args = Array.prototype.slice.call(arguments),
+        onComplete, blockId,
+        statePath,
+        site = args.shift(),
+        collection = args.shift(),
+        finalArg = args.pop();
+
+    if (typeof finalArg === 'function') {
+        onComplete = finalArg;
+        blockId = args.pop();
+    } else {
+        blockId = finalArg;
+    }
+
+    statePath = ['states'].concat(args, 'apply');
+
+    var transform = getCollectionPath(collection, statePath);
+
+    var filesIds = getCollectionPath(collection, ['blocks', blockId, 'fileIds'], 'fileIds');
+
+    var blockFiles = getFilesByIdList(collection.get('files'), filesIds);
+    return transform(site, collection, blockFiles, onComplete);
+}
+
+function getOutputsFromCollectionByFormat(/* site, collection, statePathSeg, (...statePathSeg, statePathSeg), onComplete */ ) {
+    var args = Array.prototype.slice.call(arguments),
+        onComplete,
+        statePath,
+        site = args.shift(),
+        collection = args.shift(),
+        finalArg = args.pop();
+
+    if (typeof finalArg === 'function') {
+        onComplete = finalArg;
+    } else {
+        args.push(finalArg);
+    }
+
+    statePath = ['states'].concat(args, 'apply');
+
+    var transform = getCollectionPath(collection, statePath);
+
+    var blockFiles = collection.get('files');
+    console.log(blockFiles.size);
+
+    return transform(site, collection, blockFiles, onComplete);
+}
+
+function getFileOutputsByAbsolutePath( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), filePath, onComplete */ ) {
+    var args = Array.prototype.slice.call(arguments),
+        filePath, onComplete,
+        statePath,
+        site = args.shift(),
+        collection = args.shift(),
+        finalArg = args.pop();
+
+    if (typeof finalArg === 'function') {
+        onComplete = finalArg;
+        filePath = args.pop();
+    } else {
+        filePath = finalArg;
+    }
+
+    statePath = ['states'].concat(args, 'apply');
+
+    var transform = getCollectionPath(collection, statePath);
+
+    var file = collection.get('files').filter(function(file) {
+        return file.get('absolutePath') === filePath;
+    });
+
+    return transform(site, collection, file, onComplete);
+}
+
+
 module.exports = {
     getFileIdsPerBlock: getFileIdsPerBlock,
     getBlockIdsPerFile: getBlockIdsPerFile,
@@ -154,12 +180,15 @@ module.exports = {
     getFilesForBlockById: getFilesForBlockById,
     // getBlocksForFileById: getBlocksForFileById,
     // getBlockOutputs: getBlockOutputs,
-    getBlockOutputsFromCollection: getBlockOutputsFromCollection,
-    getBlocksByFileIdFromCollection: getBlocksByFileIdFromCollection,
+
     addFileIds: addFileIds,
     getBlocksByIdList: getBlocksByIdList,
     addBlockIds: addBlockIds,
     getFilesByIdList: getFilesByIdList,
     getFileIdListByFormat: getFileIdListByFormat,
-    getFileOutputsByAbsolutePath: getFileOutputsByAbsolutePath
+
+    getFileOutputsByAbsolutePath: getFileOutputsByAbsolutePath,
+    getBlockOutputsFromCollection: getBlockOutputsFromCollection,
+    getBlocksByFileIdFromCollection: getBlocksByFileIdFromCollection,
+    getOutputsFromCollectionByFormat: getOutputsFromCollectionByFormat,
 };

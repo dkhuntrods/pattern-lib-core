@@ -41,7 +41,7 @@ function transformXslBlock(site, collection, result, file, onComplete) {
 
                 return onComplete(err);
             }
-
+            _result = _result.replace(' xmlns:msxsl="urn:schemas-microsoft-com:xslt" xmlns:ext="http://exslt.org/common"', '');
             return onComplete(null, result.push(_result));
 
         });

@@ -4,6 +4,11 @@ var nunjucks = require('nunjucks'),
     _ = require('lodash'),
     path = require('path');
 
+function getFirstResultFromList(result) {
+    if (!_.isEmpty(result) && !_.isEmpty(result[0])) return result[0];
+    else return '';
+}
+
 module.exports = function(site, collection, connector) {
 
     var getBlockOutputsFromCollection = connector.getBlockOutputsFromCollection.bind(null, site, collection);
@@ -19,16 +24,19 @@ module.exports = function(site, collection, connector) {
     });
 
     env.addFilter('xslDataPathFromBlockId', function(blockId) {
-        var result = getBlockOutputsFromCollection('xsl', 'data', blockId);
-        if (!_.isEmpty(result)) return result;
-        else return '';
+        return getFirstResultFromList(getBlockOutputsFromCollection('xsl', 'data', blockId));
     });
 
     env.addFilter('xslEntryPathFromBlockId', function(blockId){
-        var result = getBlockOutputsFromCollection('xsl', 'entry', blockId);
-        if (!_.isEmpty(result)) return result;
-        else return '';
+        return getFirstResultFromList(getBlockOutputsFromCollection('xsl', 'entry', blockId));
     });
+
+    env.addFilter('renderXSL', function(blockId, cb) {
+        getBlockOutputsFromCollection('xsl', 'block', blockId, function(err, result) {
+            return cb(err, getFirstResultFromList(result));
+        });
+
+    }, true);
 
     return env;
 };

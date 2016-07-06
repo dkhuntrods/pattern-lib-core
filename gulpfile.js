@@ -68,8 +68,7 @@ gulp.task('test:generate', function(cb) {
         var testGetBlockOutputsFromCollection = connector.getBlockOutputsFromCollection.bind(null, tSite, collection, 'js', 'entry');
 
         var alt = testGetBlockOutputsFromCollection('blocks2/core/ff_module/ff_module-task-event');
-        var test = { path: '/js/ff_module-task-event.js', reference: 'ffModuleTaskEvent' };
-        console.log(test, alt);
+        console.log(alt);
 
         cb(err);
     });
@@ -95,13 +94,12 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(cb)
 
     // var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
 
-    var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
-    console.log(fileIdList);
+    // var fileIdList = connector.getFileIdListByFormat(tSite, collection, 'md', 'entry');
+    // console.log(fileIdList);
     // connector.getFileOutputsByAbsolutePath(tSite, collection, 'md', 'entry', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-task-event/ff_module-task-event.md', function(err, val){ console.log(err, val); });
 
-    // var count = 0;
     function onComp(err, val) {
-        console.log('On Complete 1:', val);
+        console.log('On Complete:', val);
         cb();
     }
 
@@ -136,6 +134,37 @@ gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(cb)
     //         extname: '.html'
     //     }))
     //     .pipe(gulp.dest('wwwroot2/blocks2/'));
+});
+
+
+gulp.task('generate:markup:pattern', ['generate:collection:pattern'], function(cb) {
+    var fs = require('fs');
+    var mkdirp = require('mkdirp');
+    var async = require('async');
+    var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
+
+    var contexts = connector.getOutputsFromCollectionByFormat(tSite, collection, 'md', 'template', 'context');
+    var targetRoot = 'wwwroot2';
+
+    async.map(contexts, function(context, onComplete) {
+        nunjucks.render('./src2/templates/preview.njk', context, function(err, result) {
+            onComplete(err, {
+                path: context.page.urlPath,
+                content: result
+            });
+        });
+    }, function(err, results) {
+        if (err) throw new Error(err);
+        results.forEach(function(markup) {
+            var target = path.resolve(path.join(targetRoot, markup.path));
+            console.log(target, path.dirname(target));
+            mkdirp.sync(path.dirname(target));
+            fs.writeFileSync(target, markup.content, 'utf8');
+        });
+    });
+
+    cb();
+
 });
 
 /**

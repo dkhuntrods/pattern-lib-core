@@ -11,28 +11,30 @@ function getFirstResultFromList(result) {
 
 module.exports = function(site, collection, connector) {
 
-    var getBlockOutputsFromCollection = connector.getBlockOutputsFromCollection.bind(null, site, collection);
+    var getOutputsByBlockId = connector.getOutputsByBlockIdFromCollection.bind(null, site, collection),
+        getBlockNameByBlockId = connector.getBlockNameByBlockIdFromCollection.bind(null, collection),
+        getBlockIdByBlockName = connector.getBlockIdByBlockNameFromCollection.bind(null, collection);
 
     var env = nunjucks.configure({ noCache: true });
 
     env.addFilter('blockNameFromId', function(blockId) {
-        return connector.getBlockNameFromId(collection, blockId);
+        return getBlockNameByBlockId(blockId);
     });
 
     env.addFilter('blockIdFromName', function(blockName) {
-        return connector.getBlockIdFromName(collection, blockName);
+        return getBlockIdByBlockName(blockName);
     });
 
     env.addFilter('xslDataPathFromBlockId', function(blockId) {
-        return getFirstResultFromList(getBlockOutputsFromCollection('xsl', 'data', blockId));
+        return getFirstResultFromList(getOutputsByBlockId('xsl', 'data', blockId));
     });
 
     env.addFilter('xslEntryPathFromBlockId', function(blockId){
-        return getFirstResultFromList(getBlockOutputsFromCollection('xsl', 'entry', blockId));
+        return getFirstResultFromList(getOutputsByBlockId('xsl', 'entry', blockId));
     });
 
     env.addFilter('renderXSL', function(blockId, cb) {
-        getBlockOutputsFromCollection('xsl', 'block', blockId, function(err, result) {
+        getOutputsByBlockId('xsl', 'block', blockId, function(err, result) {
             return cb(err, getFirstResultFromList(result));
         });
 

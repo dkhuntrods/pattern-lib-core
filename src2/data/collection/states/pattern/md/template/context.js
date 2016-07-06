@@ -23,7 +23,7 @@ function getTemplateContext(site, collection, file) {
         dataWithBlockId = {};
         dataWithBlockId[block.get('id')] = data;
 
-        requires = requires.map(connector.getBlockIdFromName.bind(null, collection));
+        requires = requires.map(connector.getBlockIdByBlockNameFromCollection.bind(null, collection));
 
     return {
         page: {

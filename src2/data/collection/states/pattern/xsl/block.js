@@ -16,7 +16,7 @@ function transformXslBlock(site, collection, result, file, onComplete) {
     // console.log('transformXslBlock: ', file);
     var nunjucks = nunjucksRef(site, collection, connector);
 
-    var context = connector.getFileOutputsByAbsolutePath(site, collection, 'md', 'template', 'context', file.get('absolutePath').replace('.xsl', '.md'));
+    var context = connector.getOutputsByFileAbsolutePathFromCollection(site, collection, 'md', 'template', 'context', file.get('absolutePath').replace('.xsl', '.md'));
 
     context = context[0];
 

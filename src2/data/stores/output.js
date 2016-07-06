@@ -52,7 +52,7 @@ function getTransformType(sourceFilter, sourceTransform, onComplete) {
         if (hasFilterCallback) list.push('filter method: \'' + sourceFilter.name + '\'');
         if (hasTransformCallback) list.push('transform method: \'' + sourceTransform.name + '\'');
 
-        throw new Error('\nOutput transform: the transform requested (' + list.join(', ') + ') requires a callback method, but a callback method was not supplied\nCheck calls to \'getFileOutputsByAbsolutePath\' and \'getBlockOutputsFromCollection\'');
+        throw new Error('\nOutput transform: the transform requested (' + list.join(', ') + ') requires a callback method, but a callback method was not supplied\nCheck calls to \'getOutputsByFileAbsolutePathFromCollection\' and \'getBlockOutputsFromCollection\'');
     }
 
     if (hasTopLevelCallback && hasTransformCallbacks) {

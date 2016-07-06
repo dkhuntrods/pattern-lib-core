@@ -1,9 +1,9 @@
 'use strict';
 
 var path = require('path');
-var camelCase = require('../../../../../../transforms/map/camelCase'),
+var camelCase = require(path.resolve('src2/data/transforms/map/camelCase')),
     connector = require(path.resolve('src2/data/collection/connector')),
-    output = require('../../../../../../stores/output');
+    output = require(path.resolve('src2/data/stores/output'));
 
 function filterJsEntry(site, collection, file) {
     var blocks = connector.getBlocksByFileIdFromCollection(collection, file.get('id'));

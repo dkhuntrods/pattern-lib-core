@@ -2,7 +2,7 @@
 
 var path = require('path');
 
-var output = require('../../../../../../stores/output');
+var output = require(path.resolve('src2/data/stores/output'));
 
 function filterMdEntry(site, collection, file) {
 

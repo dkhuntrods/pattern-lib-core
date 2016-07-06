@@ -1,11 +1,8 @@
 'use strict';
 
-var path = require('path'),
-    matter = require('gray-matter'),
-    marked = require('marked');
+var path = require('path');
 
-var connector = require('../../../../../../../connector'),
-    output = require('../../../../../../../../stores/output');
+var output = require(path.resolve('src2/data/stores/output'));
 
 function filterBaseXml(site, collection, file) {
     return file.get('ext') === '.md';

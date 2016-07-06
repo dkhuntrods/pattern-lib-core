@@ -2,11 +2,10 @@
 
 var path = require('path'),
     matter = require('gray-matter'),
-    marked = require('marked'),
-    _ = require('lodash');
+    marked = require('marked');
 
-var connector = require('../../../../../../connector'),
-    output = require('../../../../../../../stores/output');
+var connector = require(path.resolve('src2/data/collection/connector')),
+    output = require(path.resolve('src2/data/stores/output'));
 
 function filterTemplateContext(site, collection, file) {
     return file.get('ext') === '.md';

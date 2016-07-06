@@ -14,10 +14,7 @@
     {{outputBlockXSL(contextData)}}
 
     <xsl:template match="/">
-        <xsl:text disable-output-escaping='yes'>&lt;!----&gt;</xsl:text>
-
         <xsl:apply-templates select="blocks"/>
-
     </xsl:template>
 
     <xsl:template match="blocks">

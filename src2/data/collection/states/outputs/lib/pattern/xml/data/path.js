@@ -1,6 +1,7 @@
 'use strict';
 
-var output = require('../../../../../../../stores/output');
+var path = require('path');
+var output = require(path.resolve('src2/data/stores/output'));
 
 function filterDataPath(site, collection, file) {
     return file.get('ext') === '.xml';

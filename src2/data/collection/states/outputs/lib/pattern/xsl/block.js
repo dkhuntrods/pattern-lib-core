@@ -2,9 +2,8 @@
 
 var path = require('path'),
     libxslt = require('libxslt'),
-    output = require('../../../../../../stores/output'),
-    // /src2/data/collection/connector.js
     connector = require(path.resolve('src2/data/collection/connector')),
+    output = require(path.resolve('src2/data/stores/output')),
     nunjucksRef = require(path.resolve('src2/lib/nunjucksWithData'));
 
 

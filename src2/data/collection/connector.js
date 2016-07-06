@@ -16,6 +16,17 @@ function getStorePath(store, path, name) {
     return result;
 }
 
+function getArgs(args, defaultTailLength, statePathSeg ) {
+    statePathSeg = statePathSeg || 'apply';
+    var head = args.splice(0, 2),
+        tail = [],
+        endCount = typeof args[args.length - 1] === 'function' ? defaultTailLength + 1 : defaultTailLength;
+
+    tail = args.splice(-endCount, endCount);
+
+    head.push(['states'].concat(args, statePathSeg));
+    return head.concat(tail);
+}
 
 
 
@@ -59,7 +70,6 @@ function getBlockIdsPerFile(files, blocks) {
         .reduce(blockFileReduce, {}));
 }
 
-
 function getFilesByAbsolutePath(files, filePath) {
     return files.filter(function(file) {
         return file.get('absolutePath') === filePath;
@@ -70,16 +80,11 @@ function getFilesByAbsoluteFilePathFromCollection(collection, filePath) {
     return getFilesByAbsolutePath(collection.get('files'), filePath);
 }
 
-
 function getFilesByFileIdList(files, fileIdList) {
     return fileIdList.map(function(fileId) {
         return files.get(fileId);
     });
 }
-
-// function getFilesForBlockById(blockId, files, blocks) {
-//     return getFilesByFileIdList(files, blocks.getIn([blockId, 'fileIds']));
-// }
 
 function getFileIdsPerBlock(files, blocks) {
     var joinMethod = fileBlockJoinMap.bind(null, blocks);
@@ -88,25 +93,12 @@ function getFileIdsPerBlock(files, blocks) {
         .reduce(fileBlockReduce, {}));
 }
 
-// function getBlocksForFileById(fileId, files, blocks) {
-//     return getBlocksByBlockIdList(blocks, files.getIn([fileId, 'blockIds']));
-// }
-
-
-
-// function getBlockOutputs(state, blockFiles, formatId, sourceId) {
-//     return state.getIn([formatId, sourceId])(blockFiles);
-// }
-
 function getFileIdListByFormatFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg) */ ) {
-    var args = Array.prototype.slice.call(arguments),
-        site = args.shift(),
-        collection = args.shift(),
-        statePath = ['states'].concat(args, 'filter'),
-        filterFunc = getStorePath(collection, statePath);
+    var newArgs = getArgs(Array.prototype.slice.call(arguments), 0, 'filter'),
+        collection = newArgs[1],
+        filterFunc = getStorePath(collection, newArgs[3]);
 
-    var filter = filterFunc.bind(null, site, collection);
-    // console.log(filter, collection.get('files').toJS());
+    var filter = filterFunc.bind(null, newArgs[0], collection);
     return collection.get('files').filter(filter).keySeq().toArray();
 }
 
@@ -114,78 +106,44 @@ function getBlockNameByBlockIdFromCollection(collection, blockId) {
     return getStorePath(collection, ['blocks', blockId, 'name']);
 }
 
-
 function getBlockIdByBlockNameFromCollection(collection, blockName) {
     return collection.get('blocks').filter(function(block) {
         return block.get('name') === blockName;
     }).first().get('id');
 }
 
-
-function getOutputsByBlockIdFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), blockId, onComplete */ ) {
-    var args = Array.prototype.slice.call(arguments),
-        onComplete, blockId,
-        statePath,
-        site = args.shift(),
-        collection = args.shift(),
-        finalArg = args.pop();
-
-    if (typeof finalArg === 'function') {
-        onComplete = finalArg;
-        blockId = args.pop();
-    } else {
-        blockId = finalArg;
-    }
-
-    statePath = ['states'].concat(args, 'apply');
-
+function _getOutputsByBlockIdFromCollection(site, collection, statePath, blockId, onComplete) {
     var transform = getStorePath(collection, statePath);
     var fileIds = getStorePath(collection, ['blocks', blockId, 'fileIds'], 'fileIds');
     var blockFiles = getFilesByFileIdList(collection.get('files'), fileIds);
     return transform(site, collection, blockFiles, onComplete);
 }
 
-function getOutputsByFormatFromCollection(/* site, collection, statePathSeg, (...statePathSeg, statePathSeg), onComplete */ ) {
-    var args = Array.prototype.slice.call(arguments),
-        onComplete,
-        statePath,
-        site = args.shift(),
-        collection = args.shift(),
-        finalArg = args.pop();
+function getOutputsByBlockIdFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), blockId, onComplete */ ) {
+    var newArgs = getArgs(Array.prototype.slice.call(arguments), 1);
+    return _getOutputsByBlockIdFromCollection.apply(null, newArgs);
+}
 
-    if (typeof finalArg === 'function') {
-        onComplete = finalArg;
-    } else {
-        args.push(finalArg);
-    }
-
-    statePath = ['states'].concat(args, 'apply');
-
+function _getOutputsByFormatFromCollection(site, collection, statePath, onComplete) {
     var transform = getStorePath(collection, statePath);
     var blockFiles = collection.get('files');
     return transform(site, collection, blockFiles, onComplete);
 }
 
-function getOutputsByFileAbsolutePathFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), filePath, onComplete */ ) {
-    var args = Array.prototype.slice.call(arguments),
-        filePath, onComplete,
-        statePath,
-        site = args.shift(),
-        collection = args.shift(),
-        finalArg = args.pop();
+function getOutputsByFormatFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), onComplete */ ) {
+    var newArgs = getArgs(Array.prototype.slice.call(arguments), 0);
+    return _getOutputsByFormatFromCollection.apply( null, newArgs);
+}
 
-    if (typeof finalArg === 'function') {
-        onComplete = finalArg;
-        filePath = args.pop();
-    } else {
-        filePath = finalArg;
-    }
-
-    statePath = ['states'].concat(args, 'apply');
-
+function _getOutputsByFileAbsolutePathFromCollection(site, collection, statePath, filePath, onComplete) {
     var transform = getStorePath(collection, statePath);
     var blockFiles = getFilesByAbsoluteFilePathFromCollection(collection, filePath);
     return transform(site, collection, blockFiles, onComplete);
+}
+
+function getOutputsByFileAbsolutePathFromCollection( /* site, collection, statePathSeg, (...statePathSeg, statePathSeg), filePath, onComplete */ ) {
+    var newArgs = getArgs(Array.prototype.slice.call(arguments), 1);
+    return _getOutputsByFileAbsolutePathFromCollection.apply( null, newArgs);
 }
 
 
@@ -202,11 +160,6 @@ module.exports = {
 
     getBlockNameByBlockIdFromCollection: getBlockNameByBlockIdFromCollection,
     getBlockIdByBlockNameFromCollection: getBlockIdByBlockNameFromCollection,
-    // getFilesForBlockById: getFilesForBlockById,
-    // getBlocksForFileById: getBlocksForFileById,
-    // getBlockOutputs: getBlockOutputs,
-
-
 
     getFileIdListByFormatFromCollection: getFileIdListByFormatFromCollection,
     getBlocksByFileIdFromCollection: getBlocksByFileIdFromCollection,

@@ -8,7 +8,7 @@ function filterDataPath(site, collection, file) {
 }
 
 function transformDataPath(site, collection, result, file) {
-    return file.get('absolutePath');
+    return result.push(file.get('absolutePath'));
 }
 
 module.exports = output(filterDataPath, transformDataPath);

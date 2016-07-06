@@ -9,9 +9,7 @@ function filterBaseXml(site, collection, file) {
 }
 
 function transformBaseXml(site, collection, result, file) {
-
-    return path.join('src2', 'templates', 'block-template.xml');
-
+    return result.push(path.join('src2', 'templates', 'block-template.xml'));
 }
 
 module.exports = output(filterBaseXml, transformBaseXml);

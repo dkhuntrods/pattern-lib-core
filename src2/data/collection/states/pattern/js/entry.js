@@ -1,6 +1,8 @@
 'use strict';
 
-var path = require('path');
+var path = require('path'),
+    Immutable = require('immutable');
+
 var camelCase = require(path.resolve('src2/data/transforms/map/camelCase')),
     connector = require(path.resolve('src2/data/collection/connector')),
     output = require(path.resolve('src2/data/stores/output'));
@@ -15,10 +17,10 @@ function filterJsEntry(site, collection, file) {
 }
 
 function transformJsEntry(site, collection, result, file) {
-    return result.withMutations(function(result) {
-        return result.set('path', path.join(path.sep, 'js', file.get('name')))
-            .set('reference', camelCase(file.get('name').replace('.js', '')));
-    });
+    return result.push(Immutable.Map({
+        path: path.join(path.sep, 'js', file.get('name')),
+        reference: camelCase(file.get('name').replace('.js', ''))
+    }));
 }
 
 module.exports = output(filterJsEntry, transformJsEntry);

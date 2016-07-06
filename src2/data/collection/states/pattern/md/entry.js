@@ -10,10 +10,7 @@ function filterMdEntry(site, collection, file) {
 }
 
 function transformMdToHTML(site, collection, result, file) {
-
-    return result.withMutations(function(result) {
-        return result.set('path', path.join(file.get('dir'), file.get('name').replace('.md', '.html')));
-    });
+    return result.push(path.join(file.get('dir'), file.get('name').replace('.md', '.html')));
 }
 
 module.exports = output(filterMdEntry, transformMdToHTML);

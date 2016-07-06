@@ -8,7 +8,7 @@ function filterXslEntry(site, collection, file) {
 }
 
 function transformXslEntry(site, collection, result, file) {
-    return path.relative(process.cwd(), file.get('absolutePath'));
+    return result.push(path.relative(process.cwd(), file.get('absolutePath')));
 }
 
 module.exports = output(filterXslEntry, transformXslEntry);

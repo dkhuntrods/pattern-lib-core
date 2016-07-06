@@ -43,7 +43,7 @@ function getTemplateContext(site, collection, file) {
 }
 
 function transformTemplateContext(site, collection, result, file) {
-    return getTemplateContext(site, collection, file);
+    return result.push(getTemplateContext(site, collection, file));
 }
 
 module.exports = output(filterTemplateContext, transformTemplateContext);

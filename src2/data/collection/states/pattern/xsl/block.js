@@ -15,12 +15,10 @@ function filterXslBlock(site, collection, file) {
 function transformXslBlock(site, collection, result, file, onComplete) {
     // console.log('transformXslBlock: ', file);
     var nunjucks = nunjucksRef(site, collection, connector);
+
     var context = connector.getFileOutputsByAbsolutePath(site, collection, 'md', 'template', 'context', file.get('absolutePath').replace('.xsl', '.md'));
 
-
-    // console.log(context);
-
-
+    context = context[0];
 
     var templateXMLPath = path.join('src2', 'templates', 'block-template.xml');
     var templateXSLPath = path.join('src2', 'templates', 'block-template.xsl');
@@ -44,11 +42,7 @@ function transformXslBlock(site, collection, result, file, onComplete) {
                 return onComplete(err);
             }
 
-            // console.log(_result);
-
-            return onComplete(null, _result);
-
-
+            return onComplete(null, result.push(_result));
 
         });
     });

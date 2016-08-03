@@ -9,7 +9,7 @@ function filterBaseXsl(site, collection, file) {
 }
 
 function transformBaseXsl(site, collection, result, file) {
-    return result.push(path.join('src2', 'templates', 'block-template.xsl'));
+    return result.push(path.join('src2', 'templates', 'formats', 'xslt', 'block-template.xsl'));
 }
 
 module.exports = output(filterBaseXsl, transformBaseXsl);

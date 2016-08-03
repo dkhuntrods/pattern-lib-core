@@ -58,7 +58,18 @@ var generator = require('./src2/data/collection/generator'),
 
 var tSite = Immutable.fromJS({
     title: 'Firefly test title',
-    themes: ['core', 'melody']
+    themes: ['core', 'melody'],
+    formats: [{
+        key: 'xslt',
+        name: 'XSLT',
+        state: ['xsl', 'block']
+    }
+    ,{
+        key: 'js',
+        name: 'Js',
+        state: ['js', 'block']
+    }
+    ]
 });
 
 gulp.task('test:generate', function(cb) {
@@ -90,58 +101,23 @@ gulp.task('generate:collection:pattern', function(cb) {
 
 // var mdtoXSLT = require('./src/gulp-plugins/gulp-mdtoXSLT');
 
-gulp.task('generate:xslt:pattern', ['generate:collection:pattern'], function(cb) {
-
-    // var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
-
-    // var fileIdList = connector.getFileIdListByFormatFromCollection(tSite, collection, 'md', 'entry');
-    // console.log(fileIdList);
-    // connector.getOutputsByFileAbsolutePathFromCollection(tSite, collection, 'md', 'entry', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-task-event/ff_module-task-event.md', function(err, val){ console.log(err, val); });
+gulp.task('test:xslt:pattern', ['generate:collection:pattern'], function(cb) {
 
     function onComp(err, val) {
         console.log('On Complete:', val);
         cb();
     }
-
-    // var getOutputsByFileAbsolutePathFromCollection = connector.getOutputsByFileAbsolutePathFromCollection.bind(null, tSite, collection, 'md');
-
     connector.getOutputsByFileAbsolutePathFromCollection(tSite, collection, 'xsl', 'block', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.xsl', onComp);
 
-
-    // return gulp.src(fileIdList)
-    //     .pipe(plugins.plumber({
-    //         errorHandler: function(err) {
-    //             console.log(err);
-    //         }
-    //     }))
-    //     .pipe(mdtoXSLT({
-    //         xslTemplatePath: function getXSLTemplatePath(fileBuffer, context) {
-    //             return getOutputsByFileAbsolutePathFromCollection('template','base','xsl', fileBuffer.path);
-    //         },
-    //         xmlTemplatePath: function getXMLTemplatePath(fileBuffer, context) {
-    //             console.log(fileBuffer.path);
-    //             return getOutputsByFileAbsolutePathFromCollection('template','base','xml', fileBuffer.path);
-    //         },
-    //         // renderer: swig2,
-    //         renderMethod: nunjucks.render.bind(nunjucks),
-    //         fileContext: function(fileBuffer){
-    //             // console.log('>>>', getOutputsByFileAbsolutePathFromCollection('template', 'context', fileBuffer.path));
-    //             return getOutputsByFileAbsolutePathFromCollection('template', 'context', fileBuffer.path);
-    //         },
-    //         debug: true
-    //     }))
-    //     .pipe(plugins.rename({
-    //         extname: '.html'
-    //     }))
-    //     .pipe(gulp.dest('wwwroot2/blocks2/'));
 });
 
+var nunjucksFactory = require('./src2/lib/nunjucksWithData');
 
 gulp.task('generate:markup:pattern', ['generate:collection:pattern'], function(cb) {
     var fs = require('fs');
     var mkdirp = require('mkdirp');
     var async = require('async');
-    var nunjucks = require('./src2/lib/nunjucksWithData')(tSite, collection, connector);
+    var nunjucks = nunjucksFactory(tSite, collection, connector);
 
     var contexts = connector.getOutputsByFormatFromCollection(tSite, collection, 'md', 'template', 'context');
     var targetRoot = 'wwwroot2';

@@ -3,25 +3,37 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>{{page.title}} {{site.title}}</title>
+        <title>{{page.title}} | {{site.title}}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
 
         <h1>{{page.title}}</h1>
+
+        {#<p>{{page|dump}}</p>#}
+
         <ul>
-        {% for blockId in site.blockIds %}
+        {% for blockId in page.blockIds %}
           <li>
             <p>{{ blockId }}</p>
-            <div>{{ blockId | renderXSL | safe}}</div>
+
+            {% for format in blockId | getFormats %}
+            <p>{{format.name}}</p>
+
+            <div>{{ blockId | renderFormatForBlockId(format.key) | safe}}</div>
+            {% else %}
+            <p>Format doesn't exist for this block</p>
+            {% endfor %}
+
           </li>
 
         {% else %}
-          <li>This would display if the 'site.blockIds' collection were empty</li>
+          <li>This would display if the 'page.blockIds' collection were empty</li>
         {% endfor %}
         </ul>
 
+        <p>{{page.content | safe}}</p>
 
     </body>
 </html>

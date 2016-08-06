@@ -3,34 +3,37 @@
 var Immutable = require('immutable'),
     async = require('async');
 
+var asyncFilterLength = 4,
+    asyncReduceLength = 5;
+
 function getResult(result) {
     if (Immutable.Iterable.isIterable(result)) return result.toJS();
     else return result;
 }
 
-function applySync(sourceFilter, sourceTransform, site, collection, blockFiles) {
-    var result = blockFiles
+function applySync(sourceFilter, sourceTransform, site, collection, fileList) {
+    var result = fileList
         .filter(sourceFilter.bind(null, site, collection))
         .reduce(sourceTransform.bind(null, site, collection), Immutable.List());
     return getResult(result);
 }
 
-function applyAsyncBoth(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
-    return async.filter(blockFiles.toArray(), sourceFilter.bind(null, site, collection), function(results) {
+function applyAsyncBoth(sourceFilter, sourceTransform, site, collection, fileList, onComplete) {
+    return async.filter(fileList.toArray(), sourceFilter.bind(null, site, collection), function(results) {
         return async.reduce(results, Immutable.List(), sourceTransform.bind(null, site, collection), function(err, result) {
             return onComplete(err, getResult(result));
         });
     });
 }
 
-function applyAsyncTransform(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
-    return async.reduce(blockFiles.filter(sourceFilter.bind(null, site, collection)).toArray(), Immutable.List(), sourceTransform.bind(null, site, collection), function(err, result) {
+function applyAsyncTransform(sourceFilter, sourceTransform, site, collection, fileList, onComplete) {
+    return async.reduce(fileList.filter(sourceFilter.bind(null, site, collection)).toArray(), Immutable.List(), sourceTransform.bind(null, site, collection), function(err, result) {
         return onComplete(err, getResult(result));
     });
 }
 
-function applyAsyncFilter(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
-    return async.filter(blockFiles.toArray(), sourceFilter.bind(null, site, collection), function(results) {
+function applyAsyncFilter(sourceFilter, sourceTransform, site, collection, fileList, onComplete) {
+    return async.filter(fileList.toArray(), sourceFilter.bind(null, site, collection), function(results) {
         var result = results.reduce(sourceTransform.bind(null, site, collection), Immutable.List());
         return onComplete(null, getResult(result));
     });
@@ -43,8 +46,8 @@ function getTransformType(sourceFilter, sourceTransform, onComplete) {
     var list = [];
     var type = 0;
     var hasTopLevelCallback = (typeof onComplete === 'function');
-    var hasFilterCallback = (sourceFilter.length === 4);
-    var hasTransformCallback = (sourceTransform.length === 5);
+    var hasFilterCallback = (sourceFilter.length === asyncFilterLength);
+    var hasTransformCallback = (sourceTransform.length === asyncReduceLength);
 
     var hasTransformCallbacks = hasFilterCallback || hasTransformCallback;
 
@@ -69,10 +72,10 @@ function getTransformMethod(sourceFilter, sourceTransform, onComplete) {
     return transformMethods[type];
 }
 
-function applyTransforms(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete) {
+function applyTransforms(sourceFilter, sourceTransform, site, collection, fileList, onComplete) {
 
     var transformMethod = getTransformMethod(sourceFilter, sourceTransform, onComplete);
-    return transformMethod(sourceFilter, sourceTransform, site, collection, blockFiles, onComplete);
+    return transformMethod(sourceFilter, sourceTransform, site, collection, fileList, onComplete);
 }
 
 module.exports = function(sourceFilter, sourceTransform) {

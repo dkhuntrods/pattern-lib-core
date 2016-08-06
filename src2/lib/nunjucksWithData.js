@@ -24,23 +24,27 @@ module.exports = function(site, collection, connector) {
 
     var env = nunjucks.configure({ noCache: true });
 
-    env.addFilter('blockNameFromId', function(blockId) {
+    env.addFilter('blockNameFromId', function blockNameFromId(blockId) {
         return getBlockNameByBlockId(blockId);
     });
 
-    env.addFilter('blockIdFromName', function(blockName) {
+    env.addFilter('blockIdFromName', function blockIdFromName(blockName) {
         return getBlockIdByBlockName(blockName);
     });
 
-    env.addFilter('xslDataPathFromBlockId', function(blockId) {
+    env.addFilter('xslDataPathFromBlockId', function xslDataPathFromBlockId(blockId) {
         return getFirstResultFromList(getOutputsByBlockId('xsl', 'data', blockId));
     });
 
-    env.addFilter('xslEntryPathFromBlockId', function(blockId) {
+    env.addFilter('xslEntryPathFromBlockId', function xslEntryPathFromBlockId(blockId) {
         return getFirstResultFromList(getOutputsByBlockId('xsl', 'entry', blockId));
     });
 
-    env.addFilter('getFormats', function(blockId) {
+    env.addFilter('jsSrcPathFromBlockId', function jsSrcPathFromBlockId(blockId) {
+        return getFirstResultFromList(getOutputsByBlockId('js', 'src', blockId));
+    });
+
+    env.addFilter('getFormats', function getFormats(blockId) {
         return formatList.map(function(format) {
             return {
                 key: format.get('key'),
@@ -49,7 +53,7 @@ module.exports = function(site, collection, connector) {
         }).toJS();
     });
 
-    env.addFilter('renderFormatForBlockId', function(blockId, format, cb) {
+    env.addFilter('renderFormatForBlockId', function renderFormatForBlockId(blockId, format, cb) {
         // console.log(format);
         var args = formatMap.getIn([format, 'state']).toJS();
         args = args.concat(blockId, function(err, result) {

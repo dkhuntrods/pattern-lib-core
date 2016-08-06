@@ -33,7 +33,11 @@
         {% endfor %}
         </ul>
 
-        <p>{{page.content | safe}}</p>
+        <div>{{page.content | safe}}</div>
+
+        {%- for blockId in page.blockIds -%}
+        {{ blockId | jsSrcPathFromBlockId | safe}}
+        {% endfor %}
 
     </body>
 </html>

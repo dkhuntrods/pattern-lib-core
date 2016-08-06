@@ -1,0 +1,9 @@
+<script src="{{jsSrcPath}}"></script>
+<script>
+    <![CDATA[
+    if (window.ffBlocks && typeof(window.ffBlocks["{{reference}}"]) === "function") {
+        console.log("[Including JS] {{jsSrcPath}}");
+        window.ffBlocks["{{reference}}"]();
+    }
+    ]]>
+</script>

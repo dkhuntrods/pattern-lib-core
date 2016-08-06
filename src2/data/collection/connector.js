@@ -112,7 +112,24 @@ function getBlockIdByBlockNameFromCollection(collection, blockName) {
     }).first().get('id');
 }
 
+function getBlockNameByFileIdFromCollection(collection, fileId) {
+    var blocks = getBlocksByFileIdFromCollection(collection, fileId);
+    return blocks.first().get('name');
+}
+
+function getBlockIdByFileIdFromCollection(collection, fileId) {
+    var blocks = getBlocksByFileIdFromCollection(collection, fileId);
+    return blocks.first().get('id');
+}
+
+function getBlockByFileIdFromCollection(collection, fileId) {
+    var blocks = getBlocksByFileIdFromCollection(collection, fileId);
+    return blocks.first();
+}
+
 function _getOutputsByBlockIdFromCollection(site, collection, statePath, blockId, onComplete) {
+    if (!blockId) throw new Error('\nNo blockId found for path \'' + statePath.join(', ') +
+        '\'\nCheck that the correct id has been passed within the .njk template files');
     var transform = getStorePath(collection, statePath);
     var fileIds = getStorePath(collection, ['blocks', blockId, 'fileIds'], 'fileIds');
     var blockFiles = getFilesByFileIdList(collection.get('files'), fileIds);
@@ -160,6 +177,10 @@ module.exports = {
 
     getBlockNameByBlockIdFromCollection: getBlockNameByBlockIdFromCollection,
     getBlockIdByBlockNameFromCollection: getBlockIdByBlockNameFromCollection,
+
+    getBlockByFileIdFromCollection: getBlockByFileIdFromCollection,
+    getBlockNameByFileIdFromCollection: getBlockNameByFileIdFromCollection,
+    getBlockIDByFileIdFromCollection: getBlockIdByFileIdFromCollection,
 
     getFileIdListByFormatFromCollection: getFileIdListByFormatFromCollection,
     getBlocksByFileIdFromCollection: getBlocksByFileIdFromCollection,

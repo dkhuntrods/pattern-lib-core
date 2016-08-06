@@ -7,7 +7,10 @@ module.exports = function(onComplete, sourcePath, err, paths) {
     if (err) return onComplete(err);
     var results = paths.files
         .filter(function(filePath) {
-            return /.tern-port/.test(filePath) === false;
+            return ((
+                /.tern-port/.test(filePath) ||
+                /index.js/.test(filePath)
+                ) === false);
         })
         .reduce(reducePathsToObject.bind(null, sourcePath), {});
 

@@ -2,6 +2,6 @@
 {% from './includes/output-blocks.xml' import outputBlockData %}
 
 <blocks>
-    {{ outputBlockData(contextData) }}
+    {{ outputBlockData(blockIds) }}
 </blocks>
 

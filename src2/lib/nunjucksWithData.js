@@ -41,7 +41,11 @@ module.exports = function(site, collection, connector) {
     });
 
     env.addFilter('jsSrcPathFromBlockId', function jsSrcPathFromBlockId(blockId) {
-        return getFirstResultFromList(getOutputsByBlockId('js', 'src', blockId));
+        return getFirstResultFromList(getOutputsByBlockId('js', 'entry', blockId));
+    });
+
+    env.addFilter('mdDataFromBlockId', function jsSrcPathFromBlockId(blockId) {
+        return getFirstResultFromList(getOutputsByBlockId('md', 'data', blockId));
     });
 
     env.addFilter('getFormats', function getFormats(blockId) {
@@ -54,7 +58,6 @@ module.exports = function(site, collection, connector) {
     });
 
     env.addFilter('renderFormatForBlockId', function renderFormatForBlockId(blockId, format, cb) {
-        // console.log(format);
         var args = formatMap.getIn([format, 'state']).toJS();
         args = args.concat(blockId, function(err, result) {
             return cb(err, getFirstResultFromList(result));
@@ -62,9 +65,9 @@ module.exports = function(site, collection, connector) {
         var result = getOutputsByBlockId.apply(null, args);
 
         if (result) {
-            setImmediate(function(){
+            setImmediate(function() {
                 cb(null, getFirstResultFromList(result));
-                cb = function(e, r){}; // prevent method being called twice by accident
+                cb = function(e, r) {}; // prevent method being called twice by accident
             });
         }
 

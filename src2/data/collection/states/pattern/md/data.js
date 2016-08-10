@@ -15,15 +15,7 @@ function getTemplateContext(site, collection, file) {
     var block = connector.getBlocksByFileIdFromCollection(collection, file.get('id')).get(0),
         frontMatter = matter.read(file.get('path')),
         content = frontMatter.content ? marked(frontMatter.content) : '',
-
-        data = (frontMatter.data && frontMatter.data.data) ? [].concat(frontMatter.data.data) : [],
-        page = frontMatter.data && frontMatter.data.page || {},
-        requires = (frontMatter.data && frontMatter.data.requires) ? [].concat(frontMatter.data.requires) : [],
-
-        dataWithBlockId = {};
-        dataWithBlockId[block.get('id')] = data;
-
-        requires = requires.map(connector.getBlockIdByBlockNameFromCollection.bind(null, collection));
+        page = frontMatter.data && frontMatter.data.page || {};
 
     return {
         page: {
@@ -32,13 +24,11 @@ function getTemplateContext(site, collection, file) {
             blockIds: file.get('blockIds').toArray(),
             content: content
         },
-        contextData: [dataWithBlockId],
         site: {
             title: site.get('title'),
             themes: site.get('themes').toJS(),
             blockIds: collection.get('blocks').keySeq().toJS()
-        },
-        requires: requires
+        }
     };
 }
 

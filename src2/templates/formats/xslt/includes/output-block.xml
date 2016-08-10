@@ -1,3 +1,10 @@
+{% set blockXSLPath = ''+blockId|xslEntryPathFromBlockId %}
+{% set blockName = blockId|blockNameFromId %}
+
+{% if blockXSLPath %}
 <block id="{{blockName}}">
     {% include blockId|xslDataPathFromBlockId ignore missing %}
 </block>
+{% else %}
+<block id="{{blockName}}"/>
+{% endif %}

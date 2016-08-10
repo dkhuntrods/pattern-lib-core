@@ -1,12 +1,7 @@
-{% macro outputBlockXSL(contextData) %}
-    {% for loopBlock in contextData %}
-    {% for blockId, blockData in loopBlock %}
-
-    {% set blockName = blockId|blockNameFromId %}
-
+{% macro outputBlockXSL(blockIds) %}
+    {% for blockId in blockIds %}
+        {% set blockName = blockId|blockNameFromId %}
         {% include './output-block.xsl' %}
-
-    {% endfor %}
     {% endfor %}
 {% endmacro %}
 

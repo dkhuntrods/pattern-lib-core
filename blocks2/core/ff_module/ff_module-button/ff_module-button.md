@@ -1,7 +1,4 @@
 ---
-data:
-    text: "default button"
-    icon: calendar
 page: 
     title: FF Module Button
 ---

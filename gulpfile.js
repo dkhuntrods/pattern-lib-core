@@ -63,14 +63,13 @@ var tSite = Immutable.fromJS({
         key: 'xslt',
         name: 'XSLT',
         state: ['xsl', 'block']
-    }
-    ,{
+    }, {
         key: 'js',
         name: 'Js',
         state: ['js', 'block']
-    }
-    ]
+    }]
 });
+
 
 gulp.task('test:generate', function(cb) {
 
@@ -107,8 +106,8 @@ gulp.task('test:xslt:pattern', ['generate:collection:pattern'], function(cb) {
         console.log('On Complete:', val);
         cb();
     }
-    connector.getOutputsByFileAbsolutePathFromCollection(tSite, collection, 'xsl', 'block', '/www/sites/firefly-pattern-lib/blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.xsl', onComp);
-
+    var r = connector.getOutputsByBlockIdFromCollection(tSite, collection, 'xsl', 'block', 'blocks2/core/ff_module/ff_module-dropdown-button', onComp);
+    if (r) onComp(null, r);
 });
 
 var nunjucksFactory = require('./src2/lib/nunjucksWithData');
@@ -119,7 +118,7 @@ gulp.task('generate:markup:pattern', ['generate:collection:pattern'], function(c
     var async = require('async');
     var nunjucks = nunjucksFactory(tSite, collection, connector);
 
-    var contexts = connector.getOutputsByFormatFromCollection(tSite, collection, 'md', 'template', 'context');
+    var contexts = connector.getOutputsByFormatFromCollection(tSite, collection, 'md', 'data');
     var targetRoot = 'wwwroot2';
 
     async.map(contexts, function(context, onComplete) {
@@ -145,9 +144,6 @@ gulp.task('generate:markup:pattern', ['generate:collection:pattern'], function(c
             cb(err);
         });
     });
-
-
-
 });
 
 /**

@@ -9,15 +9,14 @@ var connector = require(path.resolve('src2/data/collection/connector')),
 var templatePath = path.join('src2', 'templates', 'formats', 'js', 'block.njk');
 
 function getBlockName(collection, file) {
-    var blocks = connector.getBlocksByFileIdFromCollection(collection, file.get('id'));
-    return blocks.first().get('name');
+    return connector.getBlockNameByFileIdFromCollection(collection, file.get('id'));
 }
 
 function filterJsBlock(site, collection, file) {
     var blockName = getBlockName(collection, file);
     var equalsBlockName = new RegExp(blockName, 'g');
 
-    return /^_([\w-]+)-renderer\.js$/.test(file.get('name')) ||
+    return /^data\.js$/.test(file.get('name')) ||
         (equalsBlockName.test(file.get('name')) && file.get('ext') === '.js');
 }
 

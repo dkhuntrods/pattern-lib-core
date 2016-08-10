@@ -11,25 +11,24 @@
     encoding="utf-8"/>
 
     {{outputXSLRequires(requires)}}
-    {{outputBlockXSL(contextData)}}
+    {{outputBlockXSL(blockIds)}}
 
     <xsl:template match="/">
         <xsl:apply-templates select="blocks"/>
     </xsl:template>
 
     <xsl:template match="blocks">
+        {% for blockId in blockIds %}
+            {% set blockName = blockId|blockNameFromId %}
 
-        {% for loopBlock in contextData %}
-        {% for blockId, blockData in loopBlock %}
-        {% set blockName = blockId|blockNameFromId %}
-
-        {%- set blockXSLPath = blockId|xslEntryPathFromBlockId -%}
-        {%- if blockXSLPath -%}
-        <xsl:call-template name="call-{{blockName}}"/>
-        {%- else -%}
-        <div/>
-        {%- endif -%}
-        {%- endfor -%}
+            {%- set blockXSLPath = blockId|xslEntryPathFromBlockId -%}
+            {%- if blockXSLPath -%}
+                <xsl:call-template name="call-{{blockName}}"/>
+            {%- else -%}
+                <div/>
+            {%- endif -%}
+        {% else %}
+            <div/>
         {%- endfor -%}
     </xsl:template>
 

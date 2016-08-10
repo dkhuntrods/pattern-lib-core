@@ -1,17 +1,4 @@
 ---
-data:
-    text: "Dropdown Button"
-    id: btn-id-1
-    classes: "ff_module-other-module__owner" 
-    list: 
-        - 
-            attr: "item-a"
-            text: "Item A"   
-        - 
-            href: "#"
-            text: "Item B" 
-        - 
-            text: "Item C"
 page: 
     title: FF Module Dropdown Button
 requires: 

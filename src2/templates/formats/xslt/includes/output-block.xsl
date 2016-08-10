@@ -1,4 +1,5 @@
 {% set blockXSLPath = ''+blockId|xslEntryPathFromBlockId %}
+{% set blockName = blockId|blockNameFromId %}
 
 {% if blockXSLPath %}
 

@@ -107,9 +107,10 @@ function getBlockNameByBlockIdFromCollection(collection, blockId) {
 }
 
 function getBlockIdByBlockNameFromCollection(collection, blockName) {
-    return collection.get('blocks').filter(function(block) {
+    var blocks = collection.get('blocks').filter(function(block) {
         return block.get('name') === blockName;
-    }).first().get('id');
+    });
+    return blocks.size > 0 ? blocks.first().get('id') : null;
 }
 
 function getBlockNameByFileIdFromCollection(collection, fileId) {
@@ -180,7 +181,7 @@ module.exports = {
 
     getBlockByFileIdFromCollection: getBlockByFileIdFromCollection,
     getBlockNameByFileIdFromCollection: getBlockNameByFileIdFromCollection,
-    getBlockIDByFileIdFromCollection: getBlockIdByFileIdFromCollection,
+    getBlockIdByFileIdFromCollection: getBlockIdByFileIdFromCollection,
 
     getFileIdListByFormatFromCollection: getFileIdListByFormatFromCollection,
     getBlocksByFileIdFromCollection: getBlocksByFileIdFromCollection,

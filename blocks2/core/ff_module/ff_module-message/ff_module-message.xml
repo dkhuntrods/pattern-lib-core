@@ -1,6 +1,0 @@
-<notice id="msg-1"  notice_archived="no" isosenttime="{{ data.date }}" postback_href="{{ data.url }}" type="message" from="{{ data.author }}" from_href="{{ data.profile }}" can_archive="yes" date="{{ data.nice_date }}" importance="{{ data.importance }}">
-    <message>{{ data.text }}</message>
-    <htmlMessage>{{ data.text }}</htmlMessage>
-    <description/>
-    <attachments/>
-</notice>

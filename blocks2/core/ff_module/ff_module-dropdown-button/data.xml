@@ -1,0 +1,8 @@
+<dropdown-button id="btn-id-1" classes="ff_module-other-module__owner">
+    <text>Dropdown Button</text>
+    <list>
+        <item attr="item-a">Item A</item>
+        <item href="#">Item B</item>
+        <item>Item C</item>
+    </list>
+</dropdown-button>

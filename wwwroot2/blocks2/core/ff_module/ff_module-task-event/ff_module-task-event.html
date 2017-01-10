@@ -1,0 +1,94 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>ff_module-task-event | Firefly test title</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+
+        <h1>ff_module-task-event</h1>
+
+        
+
+        <ul>
+        
+          <li>
+            <p>blocks2/core/ff_module/ff_module-task-event</p>
+
+            
+            <p>XSLT</p>
+
+            <div></div>
+            
+            <p>Js</p>
+
+            <div><div data-ff_module-task-event=""></div>
+</div>
+            
+
+          </li>
+
+        
+        </ul>
+
+        <div><div data-ff_module-task-event=""/>
+
+
+
+<h1 id="task-event">Task event</h1>
+<p>This component renders a task event with different formats depending on the <code>type</code> property of the object passed to it.</p>
+<p><strong>Refer to <code>[firefly-webapp]/front-end/lib/task-responses/events.js</code> for the most up-to-date listing of Event types that Firefly expects.</strong></p>
+<h2 id="examples">Examples</h2>
+<p>See <a href="/blocks/core/lib_test/lib_test-task-event/lib_test-task-event.html">the examples page</a> for a list of task event types with states.</p>
+<h2 id="event-types-with-styling-and-tests">Event Types with styling and tests</h2>
+<ul>
+<li><code>comment</code></li>
+<li><code>set-task</code> </li>
+<li><code>stamp-response-as-seen</code></li>
+<li><code>confirm-student-is-excused</code></li>
+<li><code>confirm-student-is-unexcused</code></li>
+<li><code>confirm-task-is-complete</code></li>
+<li><code>request-resubmission</code></li>
+<li><code>delete-response</code></li>
+<li><code>add-file</code></li>
+</ul>
+<h2 id="event-states-with-styling">Event states with styling</h2>
+<ul>
+<li><code>deleted</code></li>
+</ul>
+<h3 id="props">Props</h3>
+<ul>
+<li><strong><code>event</code></strong>: {Object} Required<ul>
+<li><code>type</code>: {String}, eg: <code>&#39;set-task&#39;</code></li>
+<li><code>sent</code>: {Date}, eg: <code>new Date(&#39;Mon 7 Dec, 18:45&#39;)</code></li>
+<li><code>author</code>: {Object}, eg <code>{ name: &#39;Terry Teacher &#39;}</code></li>
+</ul>
+</li>
+<li><p><strong><code>actions</code></strong>: {Array}</p>
+<p>  An array of objects with properties matching that of the dropdown-button-component list items</p>
+</li>
+</ul>
+<h4 id="examples-of-event-objects">Examples of Event objects</h4>
+<pre><code>{   
+    type: &#39;added-comment&#39;, 
+    sent: &#39;Mon 7 Dec, 18:45&#39;, 
+    author: { name: &#39;Sally Student&#39; }, 
+    message: &#39;Much better, this sets the essay up very well. Very good character analysis, you understand the different perspectives and explained the context very thoroughly. Keep up the good work!&#39; 
+}
+</code></pre></div><script src="/js/ff_module-task-event.js"></script>
+<script>
+    <![CDATA[
+    if (window.ffBlocks && typeof(window.ffBlocks["ff_module-task-event"]) === "function") {
+        console.log("[Including JS] /js/ff_module-task-event.js");
+        window.ffBlocks["ff_module-task-event"]();
+    }
+    ]]>
+</script>
+
+        
+
+    </body>
+</html>

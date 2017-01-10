@@ -1,0 +1,70 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>ff_module-dropdown-button-component | Firefly test title</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+
+        <h1>ff_module-dropdown-button-component</h1>
+
+        
+
+        <ul>
+        
+          <li>
+            <p>blocks2/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button-component</p>
+
+            
+            <p>XSLT</p>
+
+            <div></div>
+            
+            <p>Js</p>
+
+            <div><div data-ff_module-dropdown-button-component=""></div>
+</div>
+            
+
+          </li>
+
+        
+        </ul>
+
+        <div><h2 id="react-button-component">React Button Component</h2>
+<div data-ff_module-dropdown-button-component=""></div>
+
+<p>See <a href="/blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.html">ff-module-dropdown-button</a> for details on dropdown styling and modifiers.</p>
+<p>This component just renders an html dropdown button, it doesn&#39;t replicate the dropdown functionality which already exists in the core &#39;vanilla&#39; dropdown file &#39;ff_module-dropdown.js&#39;.</p>
+<p><strong>The core dropdown file is activated automatically once the component mounts.</strong></p>
+<h1 id="props">Props</h1>
+<ul>
+<li><strong>text</strong>: {String, required} The text rendered by the button</li>
+<li><p><strong>list</strong>: {Array, required}: </p>
+<p>  An Array of Objects with { text: {String}, type: {String}, (href: {String} | onClick:{function} | onChange:{function}) } properties. </p>
+<p>  If a type is present, the item is rendered according to its type; otherwise, if an href is present, a standard <code>a</code> tag is rendered, finally a <code>button</code> will be rendered.</p>
+<p>  Valid types are <code>checkbox</code>, <code>radio</code>, <code>input</code>, <code>button</code>, and <code>link</code></p>
+</li>
+<li><strong>modifier</strong>: {String}: Add additional css styling for different effects.</li>
+<li><strong>isDisabled</strong>: {Boolean} Whether or not the dropdown can be clicked.</li>
+<li><strong>isOpen</strong>: {Boolean} If true, the list will be rendered in the open state.</li>
+</ul>
+<h1 id="modifiers">Modifiers</h1>
+<p>See <a href="/blocks/core/ff_module/ff_module-dropdown-button/ff_module-dropdown-button.html">ff-module-dropdown-button</a> for details on dropdown styling and modifiers.</p>
+</div><script src="/js/ff_module-dropdown-button-component.js"></script>
+<script>
+    <![CDATA[
+    if (window.ffBlocks && typeof(window.ffBlocks["ff_module-dropdown-button-component"]) === "function") {
+        console.log("[Including JS] /js/ff_module-dropdown-button-component.js");
+        window.ffBlocks["ff_module-dropdown-button-component"]();
+    }
+    ]]>
+</script>
+
+        
+
+    </body>
+</html>

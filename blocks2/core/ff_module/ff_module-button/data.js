@@ -71,3 +71,5 @@ module.exports = function() {
         });
     });
 };
+
+module.exports.data = buttonProps;

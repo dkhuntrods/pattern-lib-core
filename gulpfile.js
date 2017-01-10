@@ -146,6 +146,13 @@ gulp.task('generate:markup:pattern', ['generate:collection:pattern'], function(c
     });
 });
 
+gulp.task('generate:js:pattern', ['generate:collection:pattern'], function(cb) {
+    var webpack = require('webpack');
+    var options = config.webpack.develop;
+
+    var compiler = webpack(config.webpack.develop);
+})
+
 /**
  * HTML/XSLT
  * ******************************************/

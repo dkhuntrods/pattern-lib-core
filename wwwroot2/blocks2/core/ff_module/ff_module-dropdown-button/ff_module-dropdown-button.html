@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>FF Module Dropdown Button | Firefly test title</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+
+        <h1>FF Module Dropdown Button</h1>
+
+        
+
+        <ul>
+        
+          <li>
+            <p>blocks2/core/ff_module/ff_module-dropdown-button</p>
+
+            
+            <p>XSLT</p>
+
+            <div><div class="ff_module-dropdown-button   ff_module-other-module__owner" data-ff-dropdown-target="btn-id-1">
+<button type="button" class="ff_module-dropdown-button__button   " id="btn-id-1" data-ff-dropdown-trigger="btn-id-1"><span class="ff_module-dropdown-button__content">Dropdown Button</span><span class="ff_module-dropdown-button__icon  " data-ff-dropdown-target="btn-id-1"></span></button><div class="ff_module-dropdown-button__list-container  " data-ff-dropdown-target="btn-id-1"><ul class="ff_module-dropdown-button__list">
+<li class="ff_module-dropdown-button__list-item"><button type="button" title="Item A" class="ff_module-button ff_module-button--link ff_module-dropdown-button__link-button" data-ff_module-dropdown-button__link-button="item-a"><span class="ff_module-button__content">Item A</span></button></li>
+<li class="ff_module-dropdown-button__list-item"><a href="#" class="ff_module-dropdown-button__link">Item B</a></li>
+<li class="ff_module-dropdown-button__list-item"><button type="button" title="Item C" class="ff_module-button ff_module-button--link ff_module-dropdown-button__link-button"><span class="ff_module-button__content">Item C</span></button></li>
+</ul></div>
+</div>
+</div>
+            
+            <p>Js</p>
+
+            <div><div data-ff_module-dropdown-button=""></div>
+</div>
+            
+
+          </li>
+
+        
+        </ul>
+
+        <div><h2 id="examples">Examples</h2>
+<p>See <a href="/tests/dropdown-buttons.html">the variations page</a> for examples.</p>
+<h2 id="modifiers">Modifiers</h2>
+<ul>
+<li><strong>block</strong>: Button will take up full width of page.</li>
+<li><strong>primary</strong>: Button will take on standard primary button styling.</li>
+<li><strong>right</strong>: Button&#39;s children will align right.</li>
+<li><strong>compact</strong>: Compact style</li>
+<li><p><strong>widelist</strong>: Instead of taking the width of the button, the list will take on a set wide width.</p>
+</li>
+<li><p><strong>primary-right</strong>: Button will take on standard primary button styling and children will align right.</p>
+</li>
+<li><p><strong>primary-compact</strong>: Combines compact and primary (above)</p>
+</li>
+<li><strong>primary-compact-right</strong>: Combines compact, primary, and right (above)</li>
+<li><strong>primary-compact-right-widelist</strong></li>
+<li><strong>compact-widelist</strong></li>
+<li><strong>compact-right-widelist</strong></li>
+</ul>
+<h2 id="state">State</h2>
+<ul>
+<li><strong>(default)</strong>: Uncollapsed, content items are not hidden. </li>
+<li><strong>--is-enabled</strong>: Button is collapsed and can be clicked to expand list items</li>
+<li><strong>--is-open</strong>: Button is expanded and can be click to collapse</li>
+<li>By default, the dropdown js only adds <code>--is-enabled</code> state to dropdown buttons with the correct attribute <code>data-ff-dropdown-trigger</code>. If an <code>id</code> attribute is set in the xml, the data attribute and its related target attributes will be set automatically in the xsl. </li>
+</ul>
+<p>In order to prevent adding handlers twice, the main method will check the options passed to it, and will only activate if the options don&#39;t match any that have already been activated.</p>
+<p>If a list item has no href attribute, it will be rendered as a button. A data-attribute value of <code>data-ff_module-dropdown-button__link</code> can be set with the <code>attr</code> property.</p>
+</div><script src="/js/ff_module-dropdown-button.js"></script>
+<script>
+    <![CDATA[
+    if (window.ffBlocks && typeof(window.ffBlocks["ff_module-dropdown-button"]) === "function") {
+        console.log("[Including JS] /js/ff_module-dropdown-button.js");
+        window.ffBlocks["ff_module-dropdown-button"]();
+    }
+    ]]>
+</script>
+
+        
+
+    </body>
+</html>

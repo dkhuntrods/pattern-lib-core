@@ -1,0 +1,120 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>FF Module Button | Firefly test title</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+
+        <h1>FF Module Button</h1>
+
+        
+
+        <ul>
+        
+          <li>
+            <p>blocks2/core/ff_module/ff_module-button</p>
+
+            
+            <p>XSLT</p>
+
+            <div><button type="button" title="Default button" class="ff_module-button ff_module-button-- "><span class="ff_icon ff_icon-calendar ff_module-button__icon
+                         ff_icon-left"></span><span class="ff_module-button__content">Default button</span></button>
+</div>
+            
+            <p>Js</p>
+
+            <div><div data-ff_module-button=""></div>
+</div>
+            
+
+          </li>
+
+        
+        </ul>
+
+        <div><h2 id="react-component">React component</h2>
+<div data-ff_module-buttons="" ></div>
+
+<h2 id="usage">Usage</h2>
+<p>Call <code>ff_module-button</code> and pass-in the following XML:</p>
+<pre><code>&lt;button id=&quot;uid&quot; modifier=&quot;primary&quot; icon=&quot;calendar&quot; classes=&quot;ff_module-example__item&quot; disabled=&quot;true&quot; hide_text=&quot;true&quot;&gt;
+    &lt;text&gt;Click Me!&lt;/text&gt;
+    &lt;data attr=&quot;data-ff-attr&quot;&gt;value&lt;/data&gt;
+&lt;/button&gt;
+</code></pre><h2 id="examples">Examples</h2>
+<p>See <a href="/tests/buttons.html">the buttons test page</a> for all variations.</p>
+<h3 id="example-yml-">Example <code>yml</code></h3>
+<pre><code>data:
+    text: &quot;default button&quot;
+    modifier: primary
+    icon: calendar
+    icon_align: right
+    classes &quot;ff_module-example__item&quot;
+    disabled: true
+    hide_text: true
+    data:
+      -
+        attr: ff-data-attr
+        value: value
+</code></pre><h2 id="required-nodes-and-attributes">Required nodes and attributes</h2>
+<ul>
+<li><code>&lt;text&gt;</code></li>
+</ul>
+<h2 id="optional-nodes-and-attributes">Optional nodes and attributes</h2>
+<ul>
+<li><code>id</code></li>
+<li><code>modifier</code> (singular modifier)</li>
+<li><code>classes</code> (external classes required from other modules)</li>
+<li><code>icon</code></li>
+<li><code>&lt;data attr=&quot;&quot;/&gt;</code></li>
+<li><code>disabled</code> (disable this button)</li>
+<li><code>hide_text</code> (hide the button text, for icon only type buttons) </li>
+</ul>
+<h2 id="modifiers">Modifiers</h2>
+<h3 id="standard-styling-">Standard Styling:</h3>
+<ul>
+<li><code>primary</code></li>
+<li><code>primary-large</code></li>
+<li><code>primary-compact</code></li>
+<li><code>tertiary</code></li>
+<li><code>tertiary-large</code></li>
+<li><code>tertiary-compact</code></li>
+<li><code>large</code></li>
+<li><code>link</code></li>
+<li><code>compact</code></li>
+<li><code>danger</code></li>
+</ul>
+<h3 id="-block-styling-buttons-fill-their-container-">&quot;Block&quot; styling, buttons fill their container:</h3>
+<ul>
+<li><code>block</code></li>
+<li><code>primary-block</code></li>
+<li><code>large-block</code></li>
+<li><code>primary-large-block</code></li>
+<li><code>tertiary-block</code></li>
+<li><code>tertiary-large-block</code></li>
+<li><code>compact-block</code></li>
+<li><code>primary-compact-block</code></li>
+<li><code>tertiary-compact-block</code></li>
+<li><code>link-block</code></li>
+<li><code>danger-block</code></li>
+</ul>
+<h2 id="react-component">React component</h2>
+<p>Supports the same values as the xsl, aside from arbitray attributes.</p>
+</div><script src="/js/ff_module-button.js"></script>
+<script>
+    <![CDATA[
+    if (window.ffBlocks && typeof(window.ffBlocks["ff_module-button"]) === "function") {
+        console.log("[Including JS] /js/ff_module-button.js");
+        window.ffBlocks["ff_module-button"]();
+    }
+    ]]>
+</script>
+
+        
+
+    </body>
+</html>
